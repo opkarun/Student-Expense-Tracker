@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login · Student Expense Tracker</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+ 
+  <div class="bg-scene" aria-hidden="true">
+    <span class="blob blob-emerald"></span>
+    <span class="blob blob-indigo"></span>
+    <span class="blob blob-purple"></span>
+    <div class="grain"></div>
+  </div>
+
+  <main class="login-wrapper">
+    <section class="login-card fade-in">
+
+      <div class="brand slide-up">
+        <img src="assets/logo.svg" alt="Student Expense Tracker logo" class="brand-logo">
+        <h1 class="brand-name">Student Expense Tracker</h1>
+      </div>
+
+      
+      <div class="welcome-text slide-up delay-1">
+        <h2>Welcome back</h2>
+        <p>Log in to keep track of your spending, effortlessly.</p>
+      </div>
+
+      
+      <form class="login-form slide-up delay-2" id="loginForm" novalidate>
+
+        <div class="input-group">
+          <label for="email">Email</label>
+          <div class="input-field">
+            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" stroke="none"/><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg>
+            <input type="email" id="email" name="email" placeholder="you@university.edu" autocomplete="email">
+          </div>
+          <span class="input-error" id="emailError">Please enter a valid email address.</span>
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password</label>
+          <div class="input-field">
+            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 118 0v4"/></svg>
+            <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password">
+            <button type="button" class="toggle-password" id="togglePassword" aria-label="Show password">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <span class="input-error" id="passwordError">Password must be at least 6 characters.</span>
+        </div>
+
+        <div class="form-row">
+          <label class="checkbox-wrap">
+            <input type="checkbox" id="rememberMe">
+            <span class="checkbox-box"></span>
+            <span class="checkbox-label">Remember me</span>
+          </label>
+
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="loginBtn">
+          <span class="btn-label">Log In</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
+
+        <div class="divider"><span>or</span></div>
+
+        <a href="guest-loading.html" class="btn btn-ghost" id="guestBtn">
+          <span class="btn-label">Continue as Guest</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </a>
+      </form>
+
+      <p class="register-text slide-up delay-3">
+        Don't have an account? <a href="#" class="register-link">Register</a>
+      </p>
+
+    </section>
+  </main>
+
+  <script src="js/login.js"></script>
+</body>
+</html>

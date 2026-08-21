@@ -1,0 +1,458 @@
+/* ==========================================================================
+   Login Page
+   ========================================================================== */
+
+/* ---- Animated gradient background + floating blobs ---- */
+.bg-scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: linear-gradient(-45deg, #05070d, #101534, #0b1d2e, #1a1035);
+  background-size: 400% 400%;
+  animation: gradientShift 18s ease infinite;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.55;
+  animation: floatBlob 16s ease-in-out infinite;
+}
+
+.blob-emerald {
+  width: 380px;
+  height: 380px;
+  top: -80px;
+  left: -100px;
+  background: var(--emerald);
+  animation-duration: 18s;
+}
+
+.blob-indigo {
+  width: 420px;
+  height: 420px;
+  bottom: -120px;
+  right: -100px;
+  background: var(--indigo);
+  animation-duration: 22s;
+  animation-delay: -4s;
+}
+
+.blob-purple {
+  width: 320px;
+  height: 320px;
+  top: 40%;
+  left: 60%;
+  background: var(--purple);
+  animation-duration: 20s;
+  animation-delay: -8s;
+  opacity: 0.35;
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+
+/* ---- Layout ---- */
+.login-wrapper {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+}
+
+/* ---- Glass Card ---- */
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px 36px 32px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  box-shadow: var(--shadow-lift);
+}
+
+/* ---- Brand ---- */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.brand-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-glow-emerald);
+}
+
+.brand-name {
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+/* ---- Welcome ---- */
+.welcome-text {
+  margin-bottom: 28px;
+}
+
+.welcome-text h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+
+.welcome-text p {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* ---- Form ---- */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.input-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 0 14px;
+  transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.input-field:focus-within {
+  border-color: var(--indigo-light);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+}
+
+.input-icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.input-field input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 14.5px;
+  padding: 13px 10px;
+}
+
+.input-field input::placeholder {
+  color: var(--text-muted);
+}
+
+.toggle-password {
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 8px;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.toggle-password:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.input-error {
+  display: none;
+  font-size: 12px;
+  color: var(--red);
+  padding-left: 2px;
+}
+
+.input-group.error .input-field {
+  border-color: var(--red);
+  box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.12);
+}
+
+.input-group.error .input-error {
+  display: block;
+}
+
+/* ---- Row: remember me / forgot ---- */
+.form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -2px;
+}
+
+.checkbox-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-wrap input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkbox-box {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border: 1.5px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.04);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.checkbox-box::after {
+  content: '';
+  width: 9px;
+  height: 6px;
+  border-left: 2px solid white;
+  border-bottom: 2px solid white;
+  transform: rotate(-45deg) scale(0);
+  transition: transform var(--transition-fast);
+  margin-top: -2px;
+}
+
+.checkbox-wrap input:checked + .checkbox-box {
+  background: var(--gradient-primary);
+  border-color: transparent;
+}
+
+.checkbox-wrap input:checked + .checkbox-box::after {
+  transform: rotate(-45deg) scale(1);
+}
+
+.checkbox-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.forgot-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--indigo-light);
+  transition: color var(--transition-fast);
+}
+
+.forgot-link:hover {
+  color: var(--emerald-light);
+}
+
+/* ---- Buttons ---- */
+.btn {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: var(--radius-md);
+  font-size: 14.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: #06111a;
+  box-shadow: var(--shadow-glow-emerald);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.45);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.09);
+  transform: translateY(-2px);
+}
+
+/* Ripple effect base (JS toggles .rippling + custom props in Phase 2) */
+.btn::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  width: 10px;
+  height: 10px;
+  top: var(--ripple-y, 50%);
+  left: var(--ripple-x, 50%);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btn.rippling::after {
+  animation: ripple 0.6s var(--ease-smooth);
+}
+
+@keyframes ripple {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0.6; }
+  100% { transform: translate(-50%, -50%) scale(22); opacity: 0; }
+}
+
+/* ---- Loading spinner state ---- */
+.btn-spinner {
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: currentColor;
+  border-radius: 50%;
+}
+
+.btn.is-loading {
+  pointer-events: none;
+  cursor: default;
+}
+
+.btn.is-loading .btn-label {
+  opacity: 0;
+}
+
+.btn.is-loading .btn-spinner {
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ---- Divider ---- */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  gap: 12px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--glass-border);
+}
+
+/* ---- Register text ---- */
+.register-text {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+}
+
+.register-link {
+  color: var(--emerald-light);
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+.register-link:hover {
+  color: var(--indigo-light);
+}
+
+/* ---- Guest loading page ---- */
+.loading-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  text-align: center;
+  padding: 64px 36px;
+}
+
+.loading-spinner {
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--glass-border);
+  border-top-color: var(--emerald);
+  border-right-color: var(--indigo);
+  border-radius: 50%;
+  animation: spinPlain 0.8s linear infinite;
+}
+
+@keyframes spinPlain {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 14.5px;
+  color: var(--text-secondary);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 32px 24px 26px;
+    border-radius: var(--radius-lg);
+  }
+
+  .welcome-text h2 {
+    font-size: 24px;
+  }
+}
