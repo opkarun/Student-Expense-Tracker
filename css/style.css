@@ -74,12 +74,12 @@ body {
 .topnav-inner {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 28px;
-  height: 62px;
+  padding: 0 16px;
+  height: 58px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: 12px;
 }
 
 /* Brand */
@@ -107,6 +107,7 @@ body {
   font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.02em;
+  display: none;
 }
 
 .brand-tag {
@@ -119,11 +120,12 @@ body {
   padding: 2px 6px;
   border-radius: 6px;
   align-self: center;
+  display: none;
 }
 
-/* Nav links */
+/* Nav links — hidden on mobile, shown on desktop */
 .nav-links {
-  display: flex;
+  display: none;
   align-items: center;
   gap: 2px;
   background: rgba(255,255,255,0.04);
@@ -223,7 +225,7 @@ body {
 }
 
 .user-info {
-  display: flex;
+  display: none;
   flex-direction: column;
   line-height: 1.2;
 }
@@ -251,10 +253,10 @@ body {
 .page {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 30px 28px 56px;
+  padding: 16px 14px 40px;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 16px;
 }
 
 /* Shared card */
@@ -316,17 +318,16 @@ body {
 .hero {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr;
   align-items: center;
-  gap: 40px;
-  padding: 44px 48px;
-  border-radius: 28px;
+  gap: 28px;
+  padding: 28px 20px 24px;
+  border-radius: 20px;
   background:
     linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(16,185,129,0.08) 50%, rgba(167,139,250,0.12) 100%),
     rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.1);
   backdrop-filter: blur(28px);
-  /* overflow:visible so floating dial pills are not clipped */
   overflow: visible;
   box-shadow: 0 4px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
 }
@@ -384,7 +385,7 @@ body {
 
 .hero-heading {
   font-family: 'Outfit', sans-serif;
-  font-size: 42px;
+  font-size: 26px;
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.03em;
@@ -472,8 +473,7 @@ body {
   flex-direction: column;
   align-items: center;
   flex-shrink: 0;
-  /* Extra horizontal margin so left/right floats have room */
-  margin: 0 110px;
+  margin: 0 auto;
 }
 
 .dial-outer-ring {
@@ -589,10 +589,10 @@ body {
   letter-spacing: 0.06em;
 }
 
-/* Position pills: top centre, left side, right side — clear of the dial */
-.dial-float-top   { top: -48px; left: 50%; transform: translateX(-50%); }
-.dial-float-left  { top: 50%; right: calc(100% + 20px); transform: translateY(-50%); }
-.dial-float-right { top: 50%; left:  calc(100% + 20px); transform: translateY(-50%); }
+/* Dial float pills — stacked under dial on mobile */
+.dial-float-top   { top: -32px; left: 50%; transform: translateX(-50%); }
+.dial-float-left  { right: auto; left: 0; bottom: -42px; top: auto; transform: none; }
+.dial-float-right { left: auto; right: 0; bottom: -42px; top: auto; transform: none; }
 
 .text-red   { color: #FDA4AF; }
 .text-green { color: var(--emerald-light); }
@@ -603,8 +603,8 @@ body {
    ═══════════════════════════════════════════════ */
 .kpi-strip {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
 }
 
 .kpi-card {
@@ -774,12 +774,12 @@ body {
    ═══════════════════════════════════════════════ */
 .main-grid {
   display: grid;
-  grid-template-columns: 1fr 370px;
-  gap: 22px;
+  grid-template-columns: 1fr;
+  gap: 16px;
   align-items: start;
 }
 
-.col-left  { display: flex; flex-direction: column; gap: 22px; align-self: stretch; }
+.col-left  { display: flex; flex-direction: column; gap: 16px; align-self: stretch; }
 .col-right { display: flex; flex-direction: column; gap: 16px; }
 
 /* ═══════════════════════════════════════════════
@@ -1584,8 +1584,9 @@ body {
 /* ═══════════════════════════════════════════════
    BOTTOM NAV (mobile)
    ═══════════════════════════════════════════════ */
+/* Bottom nav — visible on mobile, hidden on desktop */
 .bottom-nav {
-  display: none;
+  display: flex;
   position: fixed;
   bottom: 0; left: 0; right: 0;
   z-index: 200;
@@ -1647,18 +1648,40 @@ body {
 .delay-4 { animation-delay: 0.28s; }
 
 /* ═══════════════════════════════════════════════
-   RESPONSIVE
+   RESPONSIVE — Mobile First
+   Base styles above are for mobile (≤ 519px)
+   Min-width breakpoints progressively enhance
    ═══════════════════════════════════════════════ */
-@media (max-width: 1080px) {
-  .main-grid {
-    grid-template-columns: 1fr 330px;
-  }
+
+/* ── Small mobile and up (≥ 520px) ──────────────── */
+@media (min-width: 520px) {
+  .hero-heading { font-size: 32px; }
+
+  .bar-value { display: block; }
 }
 
-@media (max-width: 940px) {
-  .main-grid {
-    grid-template-columns: 1fr;
+/* ── Tablet (≥ 720px) ───────────────────────────── */
+@media (min-width: 720px) {
+  .topnav-inner { padding: 0 24px; height: 62px; gap: 20px; }
+
+  .page { padding: 20px 24px 48px; gap: 20px; }
+
+  .hero {
+    grid-template-columns: 1fr auto;
+    padding: 36px 40px;
+    gap: 36px;
+    border-radius: 24px;
   }
+
+  .hero-heading { font-size: 36px; }
+
+  .budget-dial-wrap { margin: 0 110px; }
+
+  .dial-float-top   { top: -48px; left: 50%; transform: translateX(-50%); bottom: auto; }
+  .dial-float-left  { top: 50%; right: calc(100% + 20px); transform: translateY(-50%); left: auto; bottom: auto; }
+  .dial-float-right { top: 50%; left: calc(100% + 20px); transform: translateY(-50%); right: auto; bottom: auto; }
+
+  .kpi-strip { gap: 14px; }
 
   .col-right {
     display: grid;
@@ -1668,50 +1691,50 @@ body {
 
   .goal-card { grid-column: span 2; }
 
-  .kpi-strip {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .nav-links { display: none; }
+  .footer-strip { flex-direction: row; align-items: center; }
 }
 
-@media (max-width: 720px) {
-  .page { padding: 18px 16px 44px; gap: 16px; }
+/* ── Large tablet (≥ 940px) ─────────────────────── */
+@media (min-width: 940px) {
+  .kpi-strip { grid-template-columns: repeat(4, 1fr); }
 
-  .hero {
-    grid-template-columns: 1fr;
-    padding: 30px 24px 26px;
-    gap: 28px;
-  }
-
-  .hero-heading { font-size: 32px; }
-
-  .budget-dial-wrap { margin: 0 auto; }
-
-  .dial-float-left  { right: auto; left: 0; bottom: -42px; }
-  .dial-float-right { left: auto; right: 0; bottom: -42px; }
-  .dial-float-top   { top: -32px; }
-
-  .col-right { grid-template-columns: 1fr; }
+  .col-right { display: flex; flex-direction: column; }
 
   .goal-card { grid-column: span 1; }
 
-  .footer-strip { flex-direction: column; align-items: stretch; }
+  .main-grid {
+    grid-template-columns: 1fr 330px;
+    gap: 22px;
+  }
 
-  .btn-logout { justify-content: center; }
-
-  .bottom-nav { display: flex; }
-
-  .brand-name { display: none; }
-  .brand-tag { display: none; }
+  .col-left { gap: 22px; }
 }
 
-@media (max-width: 520px) {
-  .kpi-strip { grid-template-columns: 1fr 1fr; }
+/* ── Desktop (≥ 1080px) ─────────────────────────── */
+@media (min-width: 1080px) {
+  .topnav-inner { padding: 0 28px; gap: 24px; }
 
-  .hero-heading { font-size: 26px; }
+  .page { padding: 28px 28px 56px; gap: 22px; }
 
-  .chart-bars { gap: 6px; }
+  .hero {
+    padding: 44px 48px;
+    gap: 40px;
+    border-radius: 28px;
+  }
 
-  .bar-value { display: none; }
+  .hero-heading { font-size: 42px; }
+
+  .main-grid { grid-template-columns: 1fr 370px; }
+
+  .nav-links { display: flex; }
+
+  .brand-name { display: inline; }
+  .brand-tag  { display: inline; }
+
+  .user-info { display: flex; }
+
+  .bottom-nav { display: none; }
+
+  body { padding-bottom: 0; }
 }
+

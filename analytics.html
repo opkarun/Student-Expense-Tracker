@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SpendSmart Analytics — understand your spending patterns and trends at a glance.">
+  <title>Analytics · SpendSmart</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+  <!-- ── Animated mesh background ─────────────────────────────────────── -->
+  <div class="mesh-bg" aria-hidden="true">
+    <div class="mesh-orb orb-1"></div>
+    <div class="mesh-orb orb-2"></div>
+    <div class="mesh-orb orb-3"></div>
+    <div class="mesh-grid"></div>
+  </div>
+
+  <!-- ── Top Navigation ───────────────────────────────────────────────── -->
+  <header class="topnav">
+    <div class="topnav-inner">
+      <div class="nav-brand">
+        <div class="brand-mark">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <span class="brand-name">SpendSmart</span>
+        <span class="brand-tag">BETA</span>
+      </div>
+
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="index.html" class="nav-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="expenses.html" class="nav-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          Expenses
+        </a>
+        <a href="analytics.html" class="nav-link active">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+          Analytics
+        </a>
+        <a href="goals.html" class="nav-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Goals
+        </a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="nav-icon-btn" id="notificationBtn" aria-label="Notifications">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span class="notif-badge"></span>
+        </button>
+        <div class="nav-divider"></div>
+        <div class="user-chip">
+          <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Alex" alt="Alex" class="user-avatar">
+          <div class="user-info">
+            <span class="user-name">Alex</span>
+            <span class="user-role">Student</span>
+          </div>
+          <div class="online-dot"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Main Content ──────────────────────────────────────────────────── -->
+  <main class="page">
+
+    <!-- Page header -->
+    <div class="page-header slide-up">
+      <div class="page-eyebrow"><span></span>Spending Intelligence</div>
+      <div class="page-title-row">
+        <div>
+          <h1 class="page-title">Analytics</h1>
+          <p class="page-sub">Visualise patterns · spot trends · spend smarter</p>
+        </div>
+        <!-- Period filter -->
+        <div class="filter-bar" style="margin-bottom:0;">
+          <button class="filter-pill" id="period7">7D</button>
+          <button class="filter-pill active" id="period30">30D</button>
+          <button class="filter-pill" id="period90">3M</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Summary stats ───────────────────────────────────────────────── -->
+    <div class="stat-strip slide-up delay-1">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-red">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
+        </div>
+        <div class="stat-value">₹8,640</div>
+        <div class="stat-label">Total Spent</div>
+        <div class="stat-trend trend-down">↑ 12% vs Jul</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-green">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7 7 7-7"/></svg>
+        </div>
+        <div class="stat-value">₹2,360</div>
+        <div class="stat-label">Net Saved</div>
+        <div class="stat-trend trend-up">↑ 28% vs Jul</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-indigo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div class="stat-value">₹617</div>
+        <div class="stat-label">Daily Average</div>
+        <div class="stat-trend trend-down">↑ ₹42 vs last wk</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-amber">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg>
+        </div>
+        <div class="stat-value">6</div>
+        <div class="stat-label">No-Spend Days</div>
+        <div class="stat-trend trend-up">Personal best 🔥</div>
+      </div>
+    </div>
+
+    <!-- ── Two-column layout (stacks on mobile) ────────────────────────── -->
+    <div class="analytics-grid">
+
+      <!-- LEFT column -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
+
+        <!-- Daily spending bar chart -->
+        <section class="card slide-up delay-2">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Daily Spending Trend</h2>
+              <p class="card-sub">Last 7 days · ₹2,799 this week</p>
+            </div>
+            <span style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;color:var(--text-primary);">₹2,799</span>
+          </div>
+
+          <div class="chart-area">
+            <div class="chart-bars" aria-label="Daily spending bar chart">
+              <div class="bar-col">
+                <div class="bar-value">₹180</div>
+                <div class="bar-wrap"><div class="bar-fill" style="height:25%"></div></div>
+                <div class="bar-day">Mon</div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-value">₹260</div>
+                <div class="bar-wrap"><div class="bar-fill" style="height:36%"></div></div>
+                <div class="bar-day">Tue</div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-value">₹740</div>
+                <div class="bar-wrap"><div class="bar-fill" style="height:66%;background:var(--gradient-purple)"></div></div>
+                <div class="bar-day">Wed</div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-value">₹0</div>
+                <div class="bar-wrap"><div class="bar-fill" style="height:2%;background:rgba(255,255,255,0.1)"></div></div>
+                <div class="bar-day">Thu</div>
+              </div>
+              <div class="bar-col">
+                <div class="bar-value">₹120</div>
+                <div class="bar-wrap"><div class="bar-fill" style="height:17%"></div></div>
+                <div class="bar-day">Fri</div>
+              </div>
+              <div class="bar-col bar-col-peak">
+                <div class="bar-value">₹1,120</div>
+                <div class="bar-wrap"><div class="bar-fill bar-fill-peak" style="height:100%"></div></div>
+                <div class="bar-day">Sat</div>
+              </div>
+              <div class="bar-col bar-col-today">
+                <div class="bar-value">₹379</div>
+                <div class="bar-wrap"><div class="bar-fill" style="height:34%"></div></div>
+                <div class="bar-day">Today</div>
+              </div>
+            </div>
+            <div class="chart-guidelines">
+              <div class="guide-line"><span>₹1,200</span></div>
+              <div class="guide-line"><span>₹800</span></div>
+              <div class="guide-line"><span>₹400</span></div>
+              <div class="guide-line"><span>₹0</span></div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:10px;display:flex;align-items:center;gap:8px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--indigo-light)" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span style="font-size:12px;color:var(--text-secondary);">Saturday was your highest spend day — ₹1,120 on groceries &amp; takeout</span>
+          </div>
+        </section>
+
+        <!-- Month-over-month comparison -->
+        <section class="card slide-up delay-3">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Month Comparison</h2>
+              <p class="card-sub">Spending vs previous months</p>
+            </div>
+          </div>
+          <div class="compare-bars">
+            <div class="compare-row">
+              <div class="compare-row-top">
+                <span class="compare-month">August 2026 <span class="chip chip-red" style="font-size:10px;padding:1px 6px;margin-left:4px;">Current</span></span>
+                <span class="compare-amt">₹8,640</span>
+              </div>
+              <div class="compare-track"><div class="compare-fill" style="width:86%"></div></div>
+            </div>
+            <div class="compare-row">
+              <div class="compare-row-top">
+                <span class="compare-month">July 2026</span>
+                <span class="compare-amt">₹7,710</span>
+              </div>
+              <div class="compare-track"><div class="compare-fill compare-fill-prev" style="width:77%"></div></div>
+            </div>
+            <div class="compare-row">
+              <div class="compare-row-top">
+                <span class="compare-month">June 2026</span>
+                <span class="compare-amt">₹9,200</span>
+              </div>
+              <div class="compare-track"><div class="compare-fill compare-fill-prev" style="width:92%"></div></div>
+            </div>
+            <div class="compare-row">
+              <div class="compare-row-top">
+                <span class="compare-month">May 2026</span>
+                <span class="compare-amt">₹6,480</span>
+              </div>
+              <div class="compare-track"><div class="compare-fill compare-fill-prev" style="width:65%"></div></div>
+            </div>
+            <div class="compare-row">
+              <div class="compare-row-top">
+                <span class="compare-month">April 2026</span>
+                <span class="compare-amt">₹8,050</span>
+              </div>
+              <div class="compare-track"><div class="compare-fill compare-fill-prev" style="width:80%"></div></div>
+            </div>
+          </div>
+          <div style="margin-top:14px;display:flex;align-items:center;gap:12px;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="width:10px;height:10px;border-radius:50%;background:var(--gradient-primary);display:inline-block;"></span>
+              <span style="font-size:11px;color:var(--text-muted);">Current month</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.15);display:inline-block;"></span>
+              <span style="font-size:11px;color:var(--text-muted);">Previous months</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Spending heatmap -->
+        <section class="card slide-up delay-4">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Spending Heatmap</h2>
+              <p class="card-sub">August 2026 — daily intensity</p>
+            </div>
+          </div>
+          <!-- Day labels -->
+          <div class="heatmap-grid" style="margin-bottom:4px;">
+            <div class="heatmap-day-label">Sun</div>
+            <div class="heatmap-day-label">Mon</div>
+            <div class="heatmap-day-label">Tue</div>
+            <div class="heatmap-day-label">Wed</div>
+            <div class="heatmap-day-label">Thu</div>
+            <div class="heatmap-day-label">Fri</div>
+            <div class="heatmap-day-label">Sat</div>
+          </div>
+          <!-- Week 1 -->
+          <div class="heatmap-grid">
+            <div class="heatmap-cell h0" title="0 spend"></div>
+            <div class="heatmap-cell h0" title="0 spend"></div>
+            <div class="heatmap-cell h0" title="0 spend"></div>
+            <div class="heatmap-cell h0" title="0 spend"></div>
+            <div class="heatmap-cell h0" title="0 spend"></div>
+            <div class="heatmap-cell h1" title="₹85">1</div>
+            <div class="heatmap-cell h3" title="₹1,120">22</div>
+            <!-- Week 2 -->
+            <div class="heatmap-cell h1" title="₹299">6</div>
+            <div class="heatmap-cell h1" title="₹180">7</div>
+            <div class="heatmap-cell h2" title="₹499">8</div>
+            <div class="heatmap-cell h3" title="₹740">9</div>
+            <div class="heatmap-cell h0" title="₹0">10</div>
+            <div class="heatmap-cell h1" title="₹120">11</div>
+            <div class="heatmap-cell h4" title="₹1,500">12</div>
+            <!-- Week 3 -->
+            <div class="heatmap-cell h1" title="₹350">13</div>
+            <div class="heatmap-cell h2" title="₹619">14</div>
+            <div class="heatmap-cell h1" title="₹85">15</div>
+            <div class="heatmap-cell h0" title="₹0">16</div>
+            <div class="heatmap-cell h1" title="₹260">17</div>
+            <div class="heatmap-cell h1" title="₹299">18</div>
+            <div class="heatmap-cell h2" title="₹380">19</div>
+            <!-- Week 4 -->
+            <div class="heatmap-cell h1" title="₹5,000+income">20</div>
+            <div class="heatmap-cell h0" title="₹0">21</div>
+            <div class="heatmap-cell h3" title="₹1,380">22</div>
+            <div class="heatmap-cell h2" title="₹619">23</div>
+            <div class="heatmap-cell h0" title="future"></div>
+            <div class="heatmap-cell h0" title="future"></div>
+            <div class="heatmap-cell h0" title="future"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:10px;justify-content:flex-end;">
+            <span style="font-size:10px;color:var(--text-muted);">Less</span>
+            <span style="width:12px;height:12px;border-radius:3px;background:rgba(16,185,129,0.1);display:inline-block;"></span>
+            <span style="width:12px;height:12px;border-radius:3px;background:rgba(16,185,129,0.3);display:inline-block;"></span>
+            <span style="width:12px;height:12px;border-radius:3px;background:rgba(16,185,129,0.55);display:inline-block;"></span>
+            <span style="width:12px;height:12px;border-radius:3px;background:rgba(16,185,129,0.8);display:inline-block;"></span>
+            <span style="font-size:10px;color:var(--text-muted);">More</span>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- RIGHT column -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
+
+        <!-- Category donut breakdown -->
+        <section class="card slide-up delay-2">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Category Breakdown</h2>
+              <p class="card-sub">August 2026 · ₹8,640 total</p>
+            </div>
+          </div>
+
+          <!-- SVG Donut chart -->
+          <div class="donut-wrap">
+            <div class="donut-svg-wrap">
+              <svg class="donut-svg" width="160" height="160" viewBox="0 0 160 160">
+                <!-- Track -->
+                <circle class="donut-track" cx="80" cy="80" r="60" stroke-width="20"/>
+                <!-- Food: 36% → 135.72deg out of 376.99 = 135.72 -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#F87171" stroke-width="20"
+                  stroke-dasharray="135.72 241.27" stroke-dashoffset="0"/>
+                <!-- Education: 26% → 97.96 -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#818CF8" stroke-width="20"
+                  stroke-dasharray="97.96 279.03" stroke-dashoffset="-135.72"/>
+                <!-- Entertainment: 18% → 67.86 -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#FCD34D" stroke-width="20"
+                  stroke-dasharray="67.86 309.13" stroke-dashoffset="-233.68"/>
+                <!-- Transport: 12% → 45.24 -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#38BDF8" stroke-width="20"
+                  stroke-dasharray="45.24 331.75" stroke-dashoffset="-301.54"/>
+                <!-- Other: 8% → 30.16 -->
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#A78BFA" stroke-width="20"
+                  stroke-dasharray="30.16 346.83" stroke-dashoffset="-346.78"/>
+              </svg>
+              <div class="donut-center-label">
+                <span class="donut-total">₹8,640</span>
+                <span class="donut-total-sub">spent</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Legend -->
+          <div class="legend-list">
+            <div class="legend-row">
+              <span class="legend-dot" style="background:#F87171"></span>
+              <span class="legend-name">Food &amp; Drinks</span>
+              <div class="legend-bar-wrap"><div class="legend-bar-fill" style="width:36%;background:#F87171"></div></div>
+              <span class="legend-pct">36%</span>
+              <span class="legend-amt">₹3,120</span>
+            </div>
+            <div class="legend-row">
+              <span class="legend-dot" style="background:#818CF8"></span>
+              <span class="legend-name">Education</span>
+              <div class="legend-bar-wrap"><div class="legend-bar-fill" style="width:26%;background:#818CF8"></div></div>
+              <span class="legend-pct">26%</span>
+              <span class="legend-amt">₹2,240</span>
+            </div>
+            <div class="legend-row">
+              <span class="legend-dot" style="background:#FCD34D"></span>
+              <span class="legend-name">Entertainment</span>
+              <div class="legend-bar-wrap"><div class="legend-bar-fill" style="width:18%;background:#FCD34D"></div></div>
+              <span class="legend-pct">18%</span>
+              <span class="legend-amt">₹1,540</span>
+            </div>
+            <div class="legend-row">
+              <span class="legend-dot" style="background:#38BDF8"></span>
+              <span class="legend-name">Transport</span>
+              <div class="legend-bar-wrap"><div class="legend-bar-fill" style="width:12%;background:#38BDF8"></div></div>
+              <span class="legend-pct">12%</span>
+              <span class="legend-amt">₹1,020</span>
+            </div>
+            <div class="legend-row">
+              <span class="legend-dot" style="background:#A78BFA"></span>
+              <span class="legend-name">Other</span>
+              <div class="legend-bar-wrap"><div class="legend-bar-fill" style="width:8%;background:#A78BFA"></div></div>
+              <span class="legend-pct">8%</span>
+              <span class="legend-amt">₹720</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- AI Insights -->
+        <section class="card slide-up delay-3">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Smart Insights</h2>
+              <p class="card-sub">Powered by spending patterns</p>
+            </div>
+            <span class="chip chip-green">✦ AI</span>
+          </div>
+          <div class="insight-list">
+            <div class="insight-item">
+              <div class="insight-icon" style="background:rgba(248,113,113,0.15);">⚠️</div>
+              <div class="insight-body">
+                <div class="insight-title">Food spending is 78% of budget</div>
+                <div class="insight-desc">You've spent ₹3,120 on food. At this rate you'll overshoot by ₹480. Try 2 home-cooked meals this week.</div>
+              </div>
+            </div>
+            <div class="insight-item">
+              <div class="insight-icon" style="background:rgba(16,185,129,0.15);">🎉</div>
+              <div class="insight-body">
+                <div class="insight-title">28% more saved than last month</div>
+                <div class="insight-desc">You saved ₹2,360 this month vs ₹1,843 in July. Keep the momentum going!</div>
+              </div>
+            </div>
+            <div class="insight-item">
+              <div class="insight-icon" style="background:rgba(99,102,241,0.15);">📊</div>
+              <div class="insight-body">
+                <div class="insight-title">Subscriptions cost ₹618/month</div>
+                <div class="insight-desc">Netflix + Spotify + Jio = ₹618. Review unused subscriptions to free up budget.</div>
+              </div>
+            </div>
+            <div class="insight-item">
+              <div class="insight-icon" style="background:rgba(245,158,11,0.15);">💡</div>
+              <div class="insight-body">
+                <div class="insight-title">Saturday is your biggest spend day</div>
+                <div class="insight-desc">Saturdays average ₹940 across all months. Plan your weekend budget in advance.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Income vs Expense -->
+        <section class="card slide-up delay-4">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Income vs Expense</h2>
+              <p class="card-sub">August 2026</p>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                <span style="font-size:13px;color:var(--emerald-light);font-weight:600;">Income</span>
+                <span style="font-size:14px;font-weight:800;color:var(--emerald-light);">₹11,000</span>
+              </div>
+              <div class="budget-track" style="height:8px;">
+                <div class="budget-fill" style="width:100%;background:linear-gradient(90deg,var(--emerald),var(--emerald-light))"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                <span style="font-size:13px;color:var(--red);font-weight:600;">Expenses</span>
+                <span style="font-size:14px;font-weight:800;color:var(--red);">₹8,640</span>
+              </div>
+              <div class="budget-track" style="height:8px;">
+                <div class="budget-fill" style="width:78.5%;background:linear-gradient(90deg,#F87171,#EF4444)"></div>
+              </div>
+            </div>
+            <div style="height:1px;background:rgba(255,255,255,0.07)"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:13px;color:var(--text-secondary);">Net Savings</span>
+              <span style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;background:var(--gradient-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">₹2,360</span>
+            </div>
+            <div style="font-size:12px;color:var(--text-muted);text-align:center;padding:8px;background:rgba(255,255,255,0.03);border-radius:10px;">
+              💰 You saved <strong style="color:var(--emerald-light);">21.5%</strong> of your total income this month
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── Bottom navigation (mobile) ──────────────────────────────────── -->
+  <nav class="bottom-nav" aria-label="Mobile navigation">
+    <a href="index.html" class="bn-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="expenses.html" class="bn-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      <span>Expenses</span>
+    </a>
+    <a href="expenses.html" class="bn-item bn-add" aria-label="Add expense">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </a>
+    <a href="analytics.html" class="bn-item active">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+      <span>Analytics</span>
+    </a>
+    <a href="goals.html" class="bn-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <span>Goals</span>
+    </a>
+  </nav>
+
+  <script>
+    // Period filter pills
+    document.querySelectorAll('#period7,#period30,#period90').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#period7,#period30,#period90').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

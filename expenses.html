@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SpendSmart Expenses — track and manage every rupee you spend.">
+  <title>Expenses · SpendSmart</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+  <!-- ── Animated mesh background ─────────────────────────────────────── -->
+  <div class="mesh-bg" aria-hidden="true">
+    <div class="mesh-orb orb-1"></div>
+    <div class="mesh-orb orb-2"></div>
+    <div class="mesh-orb orb-3"></div>
+    <div class="mesh-grid"></div>
+  </div>
+
+  <!-- ── Top Navigation ───────────────────────────────────────────────── -->
+  <header class="topnav">
+    <div class="topnav-inner">
+      <div class="nav-brand">
+        <div class="brand-mark">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <span class="brand-name">SpendSmart</span>
+        <span class="brand-tag">BETA</span>
+      </div>
+
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="index.html" class="nav-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="expenses.html" class="nav-link active">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          Expenses
+        </a>
+        <a href="analytics.html" class="nav-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+          Analytics
+        </a>
+        <a href="goals.html" class="nav-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Goals
+        </a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="nav-icon-btn" id="notificationBtn" aria-label="Notifications">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span class="notif-badge"></span>
+        </button>
+        <div class="nav-divider"></div>
+        <div class="user-chip">
+          <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Alex" alt="Alex" class="user-avatar">
+          <div class="user-info">
+            <span class="user-name">Alex</span>
+            <span class="user-role">Student</span>
+          </div>
+          <div class="online-dot"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Main Content ──────────────────────────────────────────────────── -->
+  <main class="page">
+
+    <!-- Page header -->
+    <div class="page-header slide-up">
+      <div class="page-eyebrow"><span></span>August 2026</div>
+      <div class="page-title-row">
+        <div>
+          <h1 class="page-title">Expenses</h1>
+          <p class="page-sub">Tracking 14 transactions this month · ₹8,640 spent</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Summary stats ───────────────────────────────────────────────── -->
+    <div class="stat-strip slide-up delay-1">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-red">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7-7 7 7"/></svg>
+        </div>
+        <div class="stat-value">₹8,640</div>
+        <div class="stat-label">Total Spent</div>
+        <div class="stat-trend trend-down">↑ 12% vs last month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-green">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7 7 7-7"/></svg>
+        </div>
+        <div class="stat-value">₹3,360</div>
+        <div class="stat-label">Budget Left</div>
+        <div class="stat-trend trend-up">28% remaining</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-indigo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <div class="stat-value">14</div>
+        <div class="stat-label">Transactions</div>
+        <div class="stat-trend trend-up">6 this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-amber">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="stat-value">₹617</div>
+        <div class="stat-label">Avg / Day</div>
+        <div class="stat-trend trend-down">↑ ₹42 vs last week</div>
+      </div>
+    </div>
+
+    <!-- ── Two-column layout (stacks on mobile) ────────────────────────── -->
+    <div class="two-col-layout">
+
+      <!-- LEFT — transaction list + filters -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
+
+        <!-- Add expense form (hidden on mobile until FAB tap) -->
+        <section class="add-form-card slide-up delay-2" id="addFormCard">
+          <div class="form-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add New Expense
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label" for="expTitle">Description</label>
+              <input class="form-control" id="expTitle" type="text" placeholder="e.g. Lunch at canteen">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="expAmt">Amount (₹)</label>
+              <input class="form-control" id="expAmt" type="number" placeholder="0.00" min="0" step="0.01">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="expCat">Category</label>
+              <select class="form-control" id="expCat">
+                <option value="">Select category…</option>
+                <option>Food &amp; Drinks</option>
+                <option>Education</option>
+                <option>Transport</option>
+                <option>Entertainment</option>
+                <option>Health</option>
+                <option>Shopping</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="expDate">Date</label>
+              <input class="form-control" id="expDate" type="date" value="2026-08-23">
+            </div>
+          </div>
+          <div class="form-actions" style="margin-top:14px;">
+            <button class="btn-ghost-sm" id="cancelExpBtn" type="button">Cancel</button>
+            <button class="btn-primary-sm" type="button">Save Expense</button>
+          </div>
+        </section>
+
+        <!-- Filter bar -->
+        <div class="filter-bar slide-up delay-2">
+          <button class="filter-pill active" data-filter="all">All</button>
+          <button class="filter-pill" data-filter="food">🍔 Food</button>
+          <button class="filter-pill" data-filter="education">📚 Education</button>
+          <button class="filter-pill" data-filter="transport">🚌 Transport</button>
+          <button class="filter-pill" data-filter="entertainment">🎬 Entertainment</button>
+          <button class="filter-pill" data-filter="income">💰 Income</button>
+        </div>
+
+        <!-- Transaction list -->
+        <section class="card slide-up delay-3">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">All Transactions</h2>
+              <p class="card-sub">Aug 1 – Aug 23 · 14 entries</p>
+            </div>
+            <a href="#" class="link-btn">Export CSV →</a>
+          </div>
+
+          <!-- Date group: Today -->
+          <p class="date-group-heading">Today · Aug 23</p>
+          <div class="txn-list">
+            <div class="txn-row">
+              <span class="txn-icon txn-icon-rose">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+              </span>
+              <div class="txn-meta">
+                <p class="txn-name">Netflix</p>
+                <span class="txn-chip chip-rose">Entertainment</span>
+              </div>
+              <div class="txn-right">
+                <p class="txn-amt txn-debit">−₹499</p>
+              </div>
+            </div>
+            <div class="txn-row">
+              <span class="txn-icon txn-icon-amber">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+              </span>
+              <div class="txn-meta">
+                <p class="txn-name">Canteen Lunch</p>
+                <span class="txn-chip chip-amber">Food &amp; Drinks</span>
+              </div>
+              <div class="txn-right">
+                <p class="txn-amt txn-debit">−₹120</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Date group: Yesterday -->
+          <p class="date-group-heading">Yesterday · Aug 22</p>
+          <div class="txn-list">
+            <div class="txn-row">
+              <span class="txn-icon txn-icon-emerald">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+              </span>
+              <div class="txn-meta">
+                <p class="txn-name">Groceries — D-Mart</p>
+                <span class="txn-chip chip-emerald">Essentials</span>
+              </div>
+              <div class="txn-right">
+                <p class="txn-amt txn-debit">−₹1,120</p>
+              </div>
+            </div>
+            <div class="txn-row">
+              <span class="txn-icon txn-icon-sky">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 16H9m10 0h3v-3.15a1 1 0 00-.84-.99L16 11l-2.7-3.6a1 1 0 00-.8-.4H5.24a2 2 0 00-1.8 1.1l-.8 1.63A6 6 0 002 12.42V16h2"/><circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg>
+              </span>
+              <div class="txn-meta">
+                <p class="txn-name">Uber Ride</p>
+                <span class="txn-chip chip-sky">Transport</span>
+              </div>
+              <div class="txn-right">
+                <p class="txn-amt txn-debit">−₹260</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Date group: Aug 20 -->
+          <p class="date-group-heading">Aug 20</p>
+          <div class="txn-list">
+            <div class="txn-row income-row">
+              <span class="txn-icon txn-icon-mint">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+              </span>
+              <div class="txn-meta">
+                <p class="txn-name">Part-time Stipend</p>
+                <span class="txn-chip chip-mint">Income</span>
+              </div>
+              <div class="txn-right">
+                <p class="txn-amt txn-credit">+₹5,000</p>
+                <span class="txn-badge-income">Income</span>
+              </div>
+            </div>
+            <div class="txn-row">
+              <span class="txn-icon txn-icon-purple">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+              </span>
+              <div class="txn-meta">
+                <p class="txn-name">Textbooks — Flipkart</p>
+                <span class="txn-chip chip-purple">Education</span>
+              </div>
+              <div class="txn-right">
+                <p class="txn-amt txn-debit">−₹740</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Date group: Aug 18 -->
+          <p class="date-group-heading">Aug 18</p>
+          <div class="txn-list">
+            <div class="txn-row">
+              <span class="txn-icon txn-icon-rose">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 017 7h2"/><path d="M15 7h2a5 5 0 010 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              </span>
+              <div class="txn-meta">
+                <p class="txn-name">Spotify Premium</p>
+                <span class="txn-chip chip-rose">Entertainment</span>
+              </div>
+              <div class="txn-right">
+                <p class="txn-amt txn-debit">−₹119</p>
+              </div>
+            </div>
+            <div class="txn-row">
+              <span class="txn-icon txn-icon-indigo">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.7A2 2 0 012.18 1h3a2 2 0 012 1.72c.12.96.36 1.9.72 2.81a2 2 0 01-.45 2.11L6.91 9.1a16 16 0 006 6l1.46-1.46a2 2 0 012.11-.45c.9.36 1.85.6 2.81.72A2 2 0 0122 16.92z"/></svg>
+              </span>
+              <div class="txn-meta">
+                <p class="txn-name">Mobile Recharge — Jio</p>
+                <span class="txn-chip chip-indigo">Utilities</span>
+              </div>
+              <div class="txn-right">
+                <p class="txn-amt txn-debit">−₹299</p>
+              </div>
+            </div>
+            <div class="txn-row">
+              <span class="txn-icon txn-icon-amber">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+              </span>
+              <div class="txn-meta">
+                <p class="txn-name">Swiggy Order</p>
+                <span class="txn-chip chip-amber">Food &amp; Drinks</span>
+              </div>
+              <div class="txn-right">
+                <p class="txn-amt txn-debit">−₹380</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Date group: Aug 15 -->
+          <p class="date-group-heading">Aug 15</p>
+          <div class="txn-list">
+            <div class="txn-row">
+              <span class="txn-icon txn-icon-purple">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+              </span>
+              <div class="txn-meta">
+                <p class="txn-name">Online Course — Udemy</p>
+                <span class="txn-chip chip-purple">Education</span>
+              </div>
+              <div class="txn-right">
+                <p class="txn-amt txn-debit">−₹499</p>
+              </div>
+            </div>
+            <div class="txn-row">
+              <span class="txn-icon txn-icon-sky">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              </span>
+              <div class="txn-meta">
+                <p class="txn-name">BEST Bus Pass</p>
+                <span class="txn-chip chip-sky">Transport</span>
+              </div>
+              <div class="txn-right">
+                <p class="txn-amt txn-debit">−₹350</p>
+              </div>
+            </div>
+            <div class="txn-row">
+              <span class="txn-icon txn-icon-amber">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+              </span>
+              <div class="txn-meta">
+                <p class="txn-name">Chai &amp; Snacks</p>
+                <span class="txn-chip chip-amber">Food &amp; Drinks</span>
+              </div>
+              <div class="txn-right">
+                <p class="txn-amt txn-debit">−₹85</p>
+              </div>
+            </div>
+          </div>
+
+        </section>
+      </div>
+
+      <!-- RIGHT — budget breakdown sidebar -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
+
+        <!-- Monthly budget progress -->
+        <section class="card slide-up delay-2">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Category Budgets</h2>
+              <p class="card-sub">August 2026 · ₹12,000 total</p>
+            </div>
+          </div>
+
+          <div class="budget-list">
+            <div class="budget-row">
+              <div class="budget-row-top">
+                <span class="budget-cat-name">
+                  <span class="budget-cat-dot" style="background:#F87171"></span>
+                  Food &amp; Drinks
+                </span>
+                <span class="budget-amounts"><strong>₹3,120</strong> / ₹4,000</span>
+              </div>
+              <div class="budget-track">
+                <div class="budget-fill" style="width:78%;background:linear-gradient(90deg,#F87171,#EF4444)"></div>
+              </div>
+            </div>
+            <div class="budget-row">
+              <div class="budget-row-top">
+                <span class="budget-cat-name">
+                  <span class="budget-cat-dot" style="background:#818CF8"></span>
+                  Education
+                </span>
+                <span class="budget-amounts"><strong>₹1,239</strong> / ₹2,000</span>
+              </div>
+              <div class="budget-track">
+                <div class="budget-fill" style="width:62%;background:linear-gradient(90deg,#818CF8,#6366F1)"></div>
+              </div>
+            </div>
+            <div class="budget-row">
+              <div class="budget-row-top">
+                <span class="budget-cat-name">
+                  <span class="budget-cat-dot" style="background:#FCD34D"></span>
+                  Entertainment
+                </span>
+                <span class="budget-amounts"><strong>₹618</strong> / ₹1,500</span>
+              </div>
+              <div class="budget-track">
+                <div class="budget-fill" style="width:41%;background:linear-gradient(90deg,#FCD34D,#F59E0B)"></div>
+              </div>
+            </div>
+            <div class="budget-row">
+              <div class="budget-row-top">
+                <span class="budget-cat-name">
+                  <span class="budget-cat-dot" style="background:#38BDF8"></span>
+                  Transport
+                </span>
+                <span class="budget-amounts"><strong>₹610</strong> / ₹1,000</span>
+              </div>
+              <div class="budget-track">
+                <div class="budget-fill" style="width:61%;background:linear-gradient(90deg,#38BDF8,#0EA5E9)"></div>
+              </div>
+            </div>
+            <div class="budget-row">
+              <div class="budget-row-top">
+                <span class="budget-cat-name">
+                  <span class="budget-cat-dot" style="background:#A78BFA"></span>
+                  Other / Utilities
+                </span>
+                <span class="budget-amounts"><strong>₹299</strong> / ₹500</span>
+              </div>
+              <div class="budget-track">
+                <div class="budget-fill" style="width:60%;background:linear-gradient(90deg,#A78BFA,#8B5CF6)"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Spending tip -->
+        <div class="tip-banner slide-up delay-3">
+          <div class="tip-banner-icon">💡</div>
+          <div class="tip-banner-body">
+            <div class="tip-banner-title">Smart Tip</div>
+            <p class="tip-banner-msg">Your food spending is at <strong>78%</strong> of budget with 8 days left. Try cooking at home 2×/week to save ≈ ₹600.</p>
+          </div>
+        </div>
+
+        <!-- Quick stats recap -->
+        <section class="card slide-up delay-4">
+          <h2 class="card-title" style="margin-bottom:14px;">This Week</h2>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:13px;color:var(--text-secondary);">Highest spend day</span>
+              <span style="font-size:13px;font-weight:700;color:var(--red);">Saturday · ₹1,120</span>
+            </div>
+            <div class="section-divider"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:13px;color:var(--text-secondary);">Zero-spend days</span>
+              <span style="font-size:13px;font-weight:700;color:var(--emerald-light);">2 days 🔥</span>
+            </div>
+            <div class="section-divider"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:13px;color:var(--text-secondary);">Daily average</span>
+              <span style="font-size:13px;font-weight:700;color:var(--text-primary);">₹399</span>
+            </div>
+            <div class="section-divider"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:13px;color:var(--text-secondary);">Top category</span>
+              <span class="chip chip-red" style="font-size:11px;">Food &amp; Drinks</span>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── FAB (mobile only) ────────────────────────────────────────────── -->
+  <a href="#" class="fab-add" id="fabAdd" aria-label="Add expense">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </a>
+
+  <!-- ── Bottom navigation (mobile) ──────────────────────────────────── -->
+  <nav class="bottom-nav" aria-label="Mobile navigation">
+    <a href="index.html" class="bn-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="expenses.html" class="bn-item active">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      <span>Expenses</span>
+    </a>
+    <a href="#" class="bn-item bn-add" id="mobileAddBtn" aria-label="Add expense">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </a>
+    <a href="analytics.html" class="bn-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+      <span>Analytics</span>
+    </a>
+    <a href="goals.html" class="bn-item">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <span>Goals</span>
+    </a>
+  </nav>
+
+  <script>
+    // Filter pills
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+      });
+    });
+
+    // Mobile FAB / bottom-nav add button toggle form
+    const addFormCard = document.getElementById('addFormCard');
+    const fabAdd = document.getElementById('fabAdd');
+    const mobileAddBtn = document.getElementById('mobileAddBtn');
+    const cancelBtn = document.getElementById('cancelExpBtn');
+
+    function toggleForm(e) {
+      e.preventDefault();
+      addFormCard.classList.toggle('show');
+      addFormCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    if (fabAdd) fabAdd.addEventListener('click', toggleForm);
+    if (mobileAddBtn) mobileAddBtn.addEventListener('click', toggleForm);
+    if (cancelBtn) cancelBtn.addEventListener('click', () => addFormCard.classList.remove('show'));
+  </script>
+
+</body>
+</html>
