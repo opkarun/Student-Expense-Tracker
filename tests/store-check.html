@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Store Unit Tests · SpendSmart</title>
+  <style>
+    body  { font-family: monospace; background: #05070d; color: #F5F6FA; padding: 24px; line-height: 1.6; }
+    h1    { font-size: 20px; margin-bottom: 4px; }
+    .sub  { font-size: 13px; color: #818CF8; margin-bottom: 20px; }
+    pre   { margin: 0; white-space: pre-wrap; }
+    .pass { color: #34D399; }
+    .fail { color: #F87171; font-weight: bold; }
+    .skip { color: #FCD34D; }
+    .sep  { border-top: 1px solid #1e2235; margin: 14px 0; }
+    #summary { margin-top: 20px; font-size: 15px; font-weight: bold; }
+  </style>
+</head>
+<body>
+<h1>🧪 SpendSmart — Store Unit Tests</h1>
+<div class="sub">Open DevTools console for full details. All assertions use console.assert.</div>
+<pre id="out"></pre>
+<div id="summary"></div>
+
+<!-- Load auth stub first (store.js calls Auth.userKey / Auth.isLoggedIn) -->
+<script>
+  // Minimal Auth stub for isolated tests
+  window.Auth = {
+    userKey:    name => `__ss_test__.${name}`,
+    isLoggedIn: ()   => true,
+    getSession: ()   => ({ userId: "__test__", name: "Tester", guest: false }),
+  };
+</script>
+<script src="../js/store.js"></script>
+<script>
+  "use strict";
+
+  const out = document.getElementById("out");
+  let passed = 0, failed = 0;
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function log(msg)  { out.innerHTML += msg + "\n"; }
+  function sep()     { log('<span class="sep"></span>'); }
+
+  function test(name, fn) {
+    try {
+      fn();
+      log(`<span class="pass">✓ ${name}</span>`);
+      passed++;
+    } catch (e) {
+      log(`<span class="fail">✗ ${name}: ${e.message}</span>`);
+      console.error(`FAIL: ${name}`, e);
+      failed++;
+    }
+  }
+
+  function assert(cond, msg) {
+    if (!cond) throw new Error(msg || "Assertion failed");
+  }
+
+  function assertEqual(a, b, msg) {
+    if (a !== b) throw new Error(`${msg || ""} — expected ${JSON.stringify(b)}, got ${JSON.stringify(a)}`);
+  }
+
+  function assertApprox(a, b, eps, msg) {
+    if (Math.abs(a - b) > eps) throw new Error(`${msg || ""} — expected ≈${b}, got ${a}`);
+  }
+
+  // ── Clean slate ───────────────────────────────────────────────────────────
+  ["profile", "transactions", "goals"].forEach(k =>
+    localStorage.removeItem(Auth.userKey(k))
+  );
+
+  // ════════════════════════════════════════════════════════════════════════════
+  log("<b>── Money helpers ────────────────────────────────────────</b>");
+  // ════════════════════════════════════════════════════════════════════════════
+
+  test("toMinor(120) = 12000", () =>
+    assertEqual(Store.toMinor(120), 12000));
+
+  test("fromMinor(12000) = 120", () =>
+    assertEqual(Store.fromMinor(12000), 120));
+
+  test("0.1 + 0.2 = exactly 0.30 in minor units (no float drift)", () => {
+    const sum = Store.toMinor(0.1) + Store.toMinor(0.2);
+    assertEqual(sum, 30, "10 + 20 = 30 paise");
+    assertEqual(sum, Store.toMinor(0.3), "same as toMinor(0.3)");
+    // Prove the raw float is broken
+    assert(0.1 + 0.2 !== 0.3, "JS float drift still exists in raw arithmetic");
+  });
+
+  test("toMinor(0.126) rounds to 13", () =>
+    assertEqual(Store.toMinor(0.126), 13));
+
+  test("toMinor(0) = 0", () =>
+    assertEqual(Store.toMinor(0), 0));
+
+  test("toMinor of string '99.99'", () =>
+    assertEqual(Store.toMinor("99.99"), 9999));
+
+  sep();
+  // ════════════════════════════════════════════════════════════════════════════
+  log("<b>── Date helpers ─────────────────────────────────────────</b>");
+  // ════════════════════════════════════════════════════════════════════════════
+
+  test("todayStr() returns YYYY-MM-DD format", () => {
+    const s = Store.todayStr();
+    assert(/^\d{4}-\d{2}-\d{2}$/.test(s), `Bad format: "${s}"`);
+  });
+
+  test("todayStr() matches local date (not UTC)", () => {
+    const d = new Date();
+    const local = [
+      d.getFullYear(),
+      String(d.getMonth() + 1).padStart(2, "0"),
+      String(d.getDate()).padStart(2, "0"),
+    ].join("-");
+    assertEqual(Store.todayStr(), local, "Must use local date");
+  });
+
+  test("addDays('2026-01-30', 3) = '2026-02-02'", () =>
+    assertEqual(Store.addDays("2026-01-30", 3), "2026-02-02"));
+
+  test("addDays('2026-03-01', -1) = '2026-02-28'", () =>
+    assertEqual(Store.addDays("2026-03-01", -1), "2026-02-28"));
+
+  test("addDays crossing year boundary", () =>
+    assertEqual(Store.addDays("2025-12-31", 1), "2026-01-01"));
+
+  test("daysInMonth(2024, 2) = 29 (leap year)", () =>
+    assertEqual(Store.daysInMonth(2024, 2), 29));
+
+  test("daysInMonth(2026, 2) = 28 (non-leap)", () =>
+    assertEqual(Store.daysInMonth(2026, 2), 28));
+
+  test("daysInMonth(2026, 10) = 31", () =>
+    assertEqual(Store.daysInMonth(2026, 10), 31));
+
+  sep();
+  // ════════════════════════════════════════════════════════════════════════════
+  log("<b>── Profile ──────────────────────────────────────────────</b>");
+  // ════════════════════════════════════════════════════════════════════════════
+
+  test("getProfile() is null before any profile saved", () =>
+    assert(Store.getProfile() === null));
+
+  test("saveProfile + getProfile roundtrip", () => {
+    Store.saveProfile({
+      name: "Test User", currency: "INR",
+      monthlyBudget: 1000000, // ₹10,000 in minor units
+      onboarded: true, categoryBudgets: {}, living: "hostel",
+    });
+    const p = Store.getProfile();
+    assert(p !== null, "should exist");
+    assertEqual(p.name, "Test User");
+    assertEqual(p.currency, "INR");
+    assertEqual(p.monthlyBudget, 1000000);
+  });
+
+  sep();
+  // ════════════════════════════════════════════════════════════════════════════
+  log("<b>── Transactions ────────────────────────────────────────</b>");
+  // ════════════════════════════════════════════════════════════════════════════
+
+  test("addTransaction adds a valid expense", () => {
+    const r = Store.addTransaction({
+      type: "expense", title: "Test Lunch",
+      amount: 12000, category: "food", date: "2026-10-01",
+    });
+    assert(r.ok, "should succeed");
+    assert(r.transaction && r.transaction.id, "should have id");
+    assertEqual(r.transaction.type, "expense");
+    assertEqual(r.transaction.amount, 12000);
+  });
+
+  test("list() returns saved transaction", () => {
+    const txns = Store.list();
+    assert(txns.length >= 1, "at least one");
+  });
+
+  test("XSS title stored as plain text", () => {
+    Store.addTransaction({
+      type: "expense", title: '<img src=x onerror=alert(1)>',
+      amount: 100, category: "other", date: "2026-10-01",
+    });
+    const txns = Store.list({ type: "expense" });
+    const found = txns.find(t => t.title.includes("img"));
+    // The title must be stored as-is (plain string, not executed)
+    assert(found && found.title === '<img src=x onerror=alert(1)>',
+      "title stored verbatim; rendering layer must use textContent");
+  });
+
+  // Add a few more for totals tests
+  Store.addTransaction({ type: "expense", title: "A", amount:  5000, category: "food",      date: "2026-10-01" });
+  Store.addTransaction({ type: "expense", title: "B", amount:  3000, category: "education", date: "2026-10-01" });
+  Store.addTransaction({ type: "income",  title: "C", amount: 10000, category: "allowance", date: "2026-10-01" });
+
+  test("monthTotals returns correct types", () => {
+    const t = Store.monthTotals(2026, 10);
+    assert(typeof t.expenses === "number" && !isNaN(t.expenses), "expenses is number");
+    assert(typeof t.income   === "number" && !isNaN(t.income),   "income is number");
+    assert(typeof t.net      === "number" && !isNaN(t.net),      "net is number");
+  });
+
+  test("byCategory sums equal totalsForRange.expenses", () => {
+    const byCat  = Store.byCategory("2026-10-01", "2026-10-31");
+    const catSum = Object.values(byCat).reduce((a, b) => a + b, 0);
+    const totals = Store.totalsForRange("2026-10-01", "2026-10-31");
+    assertEqual(catSum, totals.expenses, "Sum of byCategory must equal total expenses");
+  });
+
+  test("income is excluded from byCategory", () => {
+    const byCat = Store.byCategory("2026-10-01", "2026-10-31");
+    // 'allowance' is an income category — must not appear
+    assert(!byCat.allowance, "Income categories must not appear in byCategory");
+  });
+
+  test("list filter by startDate/endDate works", () => {
+    const future = Store.addTransaction({
+      type: "expense", title: "FutureItem", amount: 999,
+      category: "other", date: "2027-01-01",
+    });
+    const oct = Store.list({ startDate: "2026-10-01", endDate: "2026-10-31" });
+    assert(!oct.some(t => t.date === "2027-01-01"), "future date must be excluded");
+  });
+
+  test("removeTransaction and undoRemove", () => {
+    const r1 = Store.addTransaction({
+      type: "expense", title: "ToRemove", amount: 500, category: "food", date: "2026-10-05",
+    });
+    const id = r1.transaction.id;
+    const r2 = Store.removeTransaction(id);
+    assert(r2.ok && r2.removed, "remove should succeed");
+    assert(!Store.list().some(t => t.id === id), "should be gone");
+    Store.undoRemove(r2.removed);
+    assert(Store.list().some(t => t.id === id), "undo should restore it");
+  });
+
+  sep();
+  // ════════════════════════════════════════════════════════════════════════════
+  log("<b>── budgetUsage with zero budget ────────────────────────</b>");
+  // ════════════════════════════════════════════════════════════════════════════
+
+  test("pct = 0 and no NaN when monthlyBudget is 0", () => {
+    Store.saveProfile({ name: "T", currency: "INR", monthlyBudget: 0, onboarded: true, categoryBudgets: {}, living: "hostel" });
+    const u = Store.budgetUsage();
+    assertEqual(u.pct, 0, "pct should be 0");
+    assert(!isNaN(u.pct),   "pct not NaN");
+    assert(!isNaN(u.spent), "spent not NaN");
+    assert(!isNaN(u.total), "total not NaN");
+  });
+
+  sep();
+  // ════════════════════════════════════════════════════════════════════════════
+  log("<b>── Goals ──────────────────────────────────────────────</b>");
+  // ════════════════════════════════════════════════════════════════════════════
+
+  test("addGoal creates a goal with id", () => {
+    const r = Store.addGoal({ name: "Laptop", emoji: "💻", target: 4500000, saved: 0, colorKey: "green" });
+    assert(r.ok && r.goal && r.goal.id, "should succeed with id");
+    assertEqual(r.goal.name, "Laptop");
+    assertEqual(r.goal.target, 4500000);
+    assertEqual(r.goal.completedAt, null, "not yet complete");
+  });
+
+  test("addContribution increases goal.saved", () => {
+    const goals = Store.getGoals();
+    const g     = goals.find(x => x.name === "Laptop");
+    assert(g, "goal must exist");
+    const before = g.saved;
+    Store.addContribution(g.id, 50000);
+    assertEqual(Store.getGoalById(g.id).saved, before + 50000, "saved must increase");
+  });
+
+  test("goal auto-completes when saved >= target", () => {
+    const r = Store.addGoal({ name: "SmallGoal", emoji: "🎯", target: 1000, saved: 0 });
+    const id = r.goal.id;
+    const cr = Store.addContribution(id, 1000);
+    assert(cr.completed, "completed flag must be true");
+    assert(Store.getGoalById(id).completedAt !== null, "completedAt must be set");
+  });
+
+  test("goal with initial saved amount fires completedAt if target met", () => {
+    const r = Store.addGoal({ name: "AlreadyDone", emoji: "✓", target: 500, saved: 500 });
+    assert(r.goal.completedAt !== null, "should be complete immediately");
+  });
+
+  test("removeGoal deletes the goal", () => {
+    const r = Store.addGoal({ name: "ToDelete", emoji: "🗑", target: 100, saved: 0 });
+    Store.removeGoal(r.goal.id);
+    assert(Store.getGoalById(r.goal.id) === null, "should be gone");
+  });
+
+  sep();
+  // ════════════════════════════════════════════════════════════════════════════
+  log("<b>── Streak ──────────────────────────────────────────────</b>");
+  // ════════════════════════════════════════════════════════════════════════════
+
+  test("streak() returns a non-negative integer", () => {
+    Store.saveProfile({ name: "T", currency: "INR", monthlyBudget: 1000000, onboarded: true, categoryBudgets: {}, living: "hostel" });
+    const s = Store.streak();
+    assert(typeof s === "number", "should be number");
+    assert(Number.isInteger(s),  "should be integer");
+    assert(s >= 0,               "should be non-negative");
+  });
+
+  sep();
+  // ════════════════════════════════════════════════════════════════════════════
+  log("<b>── Corrupt JSON recovery ───────────────────────────────</b>");
+  // ════════════════════════════════════════════════════════════════════════════
+
+  test("corrupt transactions JSON returns empty array (never crashes)", () => {
+    localStorage.setItem(Auth.userKey("transactions"), "{{{CORRUPT}}}");
+    const txns = Store.list();
+    assert(Array.isArray(txns) && txns.length === 0, "should recover gracefully");
+    localStorage.removeItem(Auth.userKey("transactions"));
+  });
+
+  test("corrupt profile JSON returns null (never crashes)", () => {
+    localStorage.setItem(Auth.userKey("profile"), "not json");
+    const p = Store.getProfile();
+    assert(p === null, "should return null");
+    localStorage.removeItem(Auth.userKey("profile"));
+  });
+
+  sep();
+  // ════════════════════════════════════════════════════════════════════════════
+  log("<b>── Decimal validation (form-boundary rule) ─────────────</b>");
+  // ════════════════════════════════════════════════════════════════════════════
+
+  test("0.01 stored and retrieved without drift", () => {
+    const minor = Store.toMinor(0.01);
+    assertEqual(minor, 1, "1 paise");
+    assertEqual(Store.fromMinor(minor), 0.01, "back to 0.01");
+  });
+
+  test("toMinor('1234.50') = 123450", () =>
+    assertEqual(Store.toMinor("1234.50"), 123450));
+
+  // ── Clean up test keys ────────────────────────────────────────────────────
+  ["profile", "transactions", "goals"].forEach(k =>
+    localStorage.removeItem(Auth.userKey(k))
+  );
+
+  // ── Summary ───────────────────────────────────────────────────────────────
+  const ok = failed === 0;
+  document.getElementById("summary").innerHTML =
+    `<span class="${ok ? "pass" : "fail"}">` +
+    `${passed} passed · ${failed} failed ${ok ? "🎉" : "❌"}` +
+    `</span>`;
+</script>
+</body>
+</html>

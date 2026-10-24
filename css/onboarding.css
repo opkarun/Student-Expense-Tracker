@@ -1,0 +1,337 @@
+/* ==========================================================================
+   onboarding.css — SpendSmart Onboarding Wizard Styles
+   Builds on base.css & login.css glassmorphism design
+   ========================================================================== */
+
+.onboard-wrapper {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.onboard-card {
+  width: 100%;
+  max-width: 580px;
+  padding: 32px 28px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  box-shadow: var(--shadow-lift);
+}
+
+/* Header & Progress */
+.onboard-header {
+  margin-bottom: 24px;
+}
+
+.onboard-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.onboard-step-indicator {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--indigo-light);
+}
+
+.skip-guest-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+.skip-guest-link:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+
+.onboard-progress-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.onboard-progress-bar {
+  height: 100%;
+  width: 25%;
+  background: var(--gradient-primary);
+  border-radius: 10px;
+  transition: width 0.35s var(--ease-smooth);
+}
+
+.onboard-step-heading {
+  font-family: 'Outfit', 'Poppins', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.onboard-step-sub {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+}
+
+/* Form steps container */
+.step-pane {
+  display: none;
+  flex-direction: column;
+  gap: 18px;
+}
+.step-pane.active {
+  display: flex;
+}
+
+/* Radio Choice Cards (Living situation) */
+.choice-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.choice-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.choice-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.choice-card input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.choice-card.selected {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: var(--indigo-light);
+  box-shadow: 0 0 0 1px var(--indigo-light), 0 4px 16px rgba(99, 102, 241, 0.25);
+}
+.choice-icon {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+.choice-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.choice-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Multi-select source chips */
+.chips-select-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+.select-chip {
+  padding: 8px 14px;
+  border-radius: 30px;
+  font-size: 12.5px;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+  transition: all var(--transition-fast);
+}
+.select-chip:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.09);
+}
+.select-chip.selected {
+  background: var(--gradient-primary);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: var(--shadow-glow-emerald);
+}
+
+/* Category budget allocations */
+.alloc-summary-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 6px;
+}
+.alloc-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+.alloc-progress-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.alloc-progress-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: var(--gradient-primary);
+  transition: width 0.25s ease, background 0.25s ease;
+}
+.alloc-progress-fill.over {
+  background: linear-gradient(90deg, #F87171, #EF4444);
+}
+.alloc-error-msg {
+  font-size: 12px;
+  color: var(--red);
+  font-weight: 500;
+}
+
+.cat-budget-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.cat-budget-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.cat-budget-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.cat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Emoji preset picker */
+.emoji-picker-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+.emoji-btn {
+  width: 38px;
+  height: 38px;
+  font-size: 18px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.emoji-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+.emoji-btn.selected {
+  background: rgba(99, 102, 241, 0.25);
+  border-color: var(--indigo-light);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.35);
+  transform: scale(1.1);
+}
+
+/* Checkbox styling */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+.checkbox-label input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--emerald);
+  cursor: pointer;
+}
+
+/* Nav action buttons */
+.onboard-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* Success state screen */
+.onboard-success {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 10px;
+  gap: 16px;
+}
+.success-icon-badge {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  animation: pulse 2s infinite;
+}
+
+@media (max-width: 480px) {
+  .onboard-card {
+    padding: 24px 18px;
+  }
+  .choice-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .cat-budget-grid {
+    grid-template-columns: 1fr;
+    max-height: 240px;
+  }
+}

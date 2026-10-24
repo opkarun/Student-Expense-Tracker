@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="SpendSmart — the smartest way for students to track spending, savings, and budgets.">
   <title>Dashboard · SpendSmart</title>
+  <link rel="icon" href="data:,">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +13,10 @@
 
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/style.css">
+  <script src="js/auth.js"></script>
+  <script>Auth.requireAuth();</script>
+  <script src="js/store.js"></script>
+  <script>Store.requireOnboarded();</script>
 </head>
 <body>
 
@@ -56,16 +61,27 @@
       <div class="nav-actions">
         <button class="nav-icon-btn" id="notificationBtn" aria-label="Notifications">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-          <span class="notif-badge">3</span>
+          <span class="notif-badge" id="notifBadge"></span>
         </button>
         <div class="nav-divider"></div>
-        <div class="user-chip" id="profileBtn">
-          <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Alex" alt="Alex" class="user-avatar">
-          <div class="user-info">
-            <span class="user-name">Alex</span>
-            <span class="user-role">Student</span>
+        <div class="profile-menu-wrap">
+          <button type="button" class="user-chip" id="profileBtn" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
+            <img alt="" class="user-avatar" data-user-avatar>
+            <span class="user-info">
+              <span class="user-name" data-user-name></span>
+              <span class="user-role" data-user-role></span>
+            </span>
+            <span class="online-dot"></span>
+          </button>
+          <div class="profile-menu" id="profileMenu" aria-label="Account menu" hidden>
+            <div class="profile-menu-summary">
+              <span class="profile-menu-name" data-profile-menu-name></span>
+              <span class="profile-menu-email" data-profile-menu-email></span>
+            </div>
+            <a class="profile-menu-action" href="onboarding.html?edit=1">Edit profile &amp; budget</a>
+            <a class="profile-menu-action" href="login.html#signup" data-profile-signup hidden>Sign up to save your data</a>
+            <button type="button" class="profile-menu-action profile-menu-logout" data-profile-logout>Log out</button>
           </div>
-          <div class="online-dot"></div>
         </div>
       </div>
     </div>
@@ -79,20 +95,20 @@
         <div class="hero-text">
           <div class="hero-eyebrow">
             <span class="eyebrow-dot"></span>
-            August 2026 · Week 1
+            <span id="heroEyebrow">Current Month</span>
           </div>
           <h1 class="hero-heading">
-            Good morning, <br>
-            <span class="hero-name-gradient">Alex</span>
+            <span data-time-greeting>Good morning,</span> <br>
+            <span class="hero-name-gradient" data-user-firstname></span>
             <span class="wave">👋</span>
           </h1>
-          <p class="hero-desc">Your finances are looking <strong>healthy</strong> this month. You've saved 28% more than last month.</p>
+          <p class="hero-desc" id="heroDesc">Welcome to your dashboard. Start tracking your budget and expenses.</p>
           <div class="hero-cta-row">
-            <button class="btn-hero-primary">
+            <button class="btn-hero-primary" onclick="location.href='expenses.html#add'">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Log Expense
             </button>
-            <button class="btn-hero-ghost">
+            <button class="btn-hero-ghost" onclick="location.href='analytics.html'">
               View Full Report →
             </button>
           </div>
@@ -109,35 +125,35 @@
                   <stop offset="50%" stop-color="#6366F1"/>
                   <stop offset="100%" stop-color="#A78BFA"/>
                 </linearGradient>
-                <linearGradient id="dialWarn" x1="0%" y1="0%" x2="100%" y2="100%">
+                <linearGradient id="dialWarnGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stop-color="#F59E0B"/>
                   <stop offset="100%" stop-color="#EF4444"/>
                 </linearGradient>
               </defs>
               <circle class="dial-track" cx="100" cy="100" r="82"/>
              
-              <circle class="dial-arc dial-arc-spent" cx="100" cy="100" r="82"/>
+              <circle class="dial-arc dial-arc-spent" id="dialArc" cx="100" cy="100" r="82"/>
               
               <circle cx="100" cy="100" r="66" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
               <circle cx="100" cy="100" r="52" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
             </svg>
             <div class="dial-label">
-              <span class="dial-pct">72<small>%</small></span>
-              <span class="dial-caption">budget used</span>
-              <span class="dial-warn">⚠ High spending</span>
+              <span class="dial-pct" id="dialPct">0<small>%</small></span>
+              <span class="dial-caption" id="dialCaption">budget used</span>
+              <span class="dial-warn" id="dialWarn" style="display:none;">⚠ High spending</span>
             </div>
           </div>
          
           <div class="dial-float dial-float-top">
-            <span class="df-val">₹12,000</span>
+            <span class="df-val" id="dialTotal">₹0</span>
             <span class="df-lbl">Total Budget</span>
           </div>
           <div class="dial-float dial-float-left">
-            <span class="df-val text-red">₹8,640</span>
+            <span class="df-val text-red" id="dialSpent">₹0</span>
             <span class="df-lbl">Spent</span>
           </div>
           <div class="dial-float dial-float-right">
-            <span class="df-val text-green">₹3,360</span>
+            <span class="df-val text-green" id="dialLeft">₹0</span>
             <span class="df-lbl">Left</span>
           </div>
         </div>
@@ -155,7 +171,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg>
         </div>
         <div class="kpi-body">
-          <span class="kpi-value">6</span>
+          <span class="kpi-value" id="kpiStreakVal">0</span>
           <span class="kpi-label">Day Streak 🔥</span>
         </div>
         <div class="kpi-flame-bg"></div>
@@ -166,10 +182,10 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 17 17 7"/><polyline points="7 7 17 7 17 17"/></svg>
         </div>
         <div class="kpi-body">
-          <span class="kpi-value">₹2,360</span>
+          <span class="kpi-value" id="kpiSavedVal">₹0</span>
           <span class="kpi-label">Saved this month</span>
         </div>
-        <div class="kpi-trend">+28%</div>
+        <div class="kpi-trend" id="kpiSavedTrend" style="display:none;"></div>
       </div>
 
       <div class="kpi-card kpi-txn">
@@ -177,30 +193,24 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         </div>
         <div class="kpi-body">
-          <span class="kpi-value">6</span>
+          <span class="kpi-value" id="kpiTxnVal">0</span>
           <span class="kpi-label">Transactions this week</span>
         </div>
-        <div class="kpi-mini-bars" aria-hidden="true">
-          <span style="height:40%"></span>
-          <span style="height:70%"></span>
-          <span style="height:55%"></span>
-          <span style="height:90%"></span>
-          <span style="height:60%"></span>
-          <span style="height:30%"></span>
-          <span style="height:75%"></span>
+        <div class="kpi-mini-bars" id="kpiMiniBars" aria-hidden="true">
+          <!-- 7 daily bars populated dynamically -->
         </div>
       </div>
 
-      <div class="kpi-card kpi-goal">
+      <div class="kpi-card kpi-goal" id="kpiGoalCard" style="cursor:pointer;" onclick="location.href='goals.html'">
         <div class="kpi-icon-wrap">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
         </div>
         <div class="kpi-body">
-          <span class="kpi-value">62%</span>
-          <span class="kpi-label">Laptop goal progress</span>
+          <span class="kpi-value" id="kpiGoalPct">0%</span>
+          <span class="kpi-label" id="kpiGoalLabel">Goal progress</span>
         </div>
         <div class="kpi-goal-track">
-          <div class="kpi-goal-fill"></div>
+          <div class="kpi-goal-fill" id="kpiGoalFill"></div>
         </div>
       </div>
 
@@ -220,61 +230,24 @@
               <p class="card-sub">Daily spend · last 7 days</p>
             </div>
             <div class="trend-total-wrap">
-              <span class="trend-total">₹2,799</span>
+              <span class="trend-total" id="trendTotal">₹0</span>
               <span class="trend-total-lbl">this week</span>
             </div>
           </div>
 
           <div class="chart-area">
-            <div class="chart-bars" aria-label="Spending bar chart">
-              <div class="bar-col">
-                <div class="bar-value">₹180</div>
-                <div class="bar-wrap"><div class="bar-fill" style="height:25%"></div></div>
-                <div class="bar-day">Mon</div>
-              </div>
-              <div class="bar-col">
-                <div class="bar-value">₹260</div>
-                <div class="bar-wrap"><div class="bar-fill" style="height:36%"></div></div>
-                <div class="bar-day">Tue</div>
-              </div>
-              <div class="bar-col">
-                <div class="bar-value">₹740</div>
-                <div class="bar-wrap"><div class="bar-fill" style="height:66%;background:var(--gradient-purple)"></div></div>
-                <div class="bar-day">Wed</div>
-              </div>
-              <div class="bar-col">
-                <div class="bar-value">₹0</div>
-                <div class="bar-wrap"><div class="bar-fill" style="height:4%"></div></div>
-                <div class="bar-day">Thu</div>
-              </div>
-              <div class="bar-col">
-                <div class="bar-value">₹120</div>
-                <div class="bar-wrap"><div class="bar-fill" style="height:17%"></div></div>
-                <div class="bar-day">Fri</div>
-              </div>
-              <div class="bar-col bar-col-peak">
-                <div class="bar-value">₹1,120</div>
-                <div class="bar-wrap"><div class="bar-fill bar-fill-peak" style="height:100%"></div></div>
-                <div class="bar-day">Sat</div>
-              </div>
-              <div class="bar-col bar-col-today">
-                <div class="bar-value">₹499</div>
-                <div class="bar-wrap"><div class="bar-fill" style="height:45%"></div></div>
-                <div class="bar-day">Today</div>
-              </div>
+            <div class="chart-bars" id="trendBars" aria-label="Spending bar chart">
+              <!-- Dynamically populated 7 bars -->
             </div>
-            <div class="chart-guidelines">
-              <div class="guide-line"><span>₹1,200</span></div>
-              <div class="guide-line"><span>₹800</span></div>
-              <div class="guide-line"><span>₹400</span></div>
-              <div class="guide-line"><span>₹0</span></div>
+            <div class="chart-guidelines" id="trendGuidelines">
+              <!-- Dynamically populated 4 step guidelines -->
             </div>
           </div>
 
           <div class="trend-footer">
-            <span class="trend-insight">
+            <span class="trend-insight" id="trendInsight">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              Saturday was your highest spend day — ₹1,120 on groceries
+              No spending data yet for this week
             </span>
           </div>
         </section>
@@ -284,103 +257,56 @@
           <div class="card-head">
             <div>
               <h2 class="card-title">Recent Transactions</h2>
-              <p class="card-sub">Aug 1 – Aug 6 · 6 entries</p>
+              <p class="card-sub" id="recentTxnSub">Latest activity</p>
             </div>
-            <a href="#" class="link-btn">View all →</a>
+            <a href="expenses.html" class="link-btn">View all →</a>
           </div>
 
-          <div class="txn-list">
-
-            <div class="txn-row">
-              <span class="txn-icon txn-icon-rose">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
-              </span>
-              <div class="txn-meta">
-                <p class="txn-name">Netflix</p>
-                <span class="txn-chip chip-rose">Entertainment · Today</span>
-              </div>
-              <div class="txn-right">
-                <p class="txn-amt txn-debit">−₹499</p>
-              </div>
-            </div>
-
-            <div class="txn-divider"></div>
-
-            <div class="txn-row">
-              <span class="txn-icon txn-icon-emerald">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
-              </span>
-              <div class="txn-meta">
-                <p class="txn-name">Groceries</p>
-                <span class="txn-chip chip-emerald">Essentials · Yesterday</span>
-              </div>
-              <div class="txn-right">
-                <p class="txn-amt txn-debit">−₹1,120</p>
-              </div>
-            </div>
-
-            <div class="txn-divider"></div>
-
-            <div class="txn-row income-row">
-              <span class="txn-icon txn-icon-mint">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-              </span>
-              <div class="txn-meta">
-                <p class="txn-name">Part-time Stipend</p>
-                <span class="txn-chip chip-mint">Income · Jul 28</span>
-              </div>
-              <div class="txn-right">
-                <p class="txn-amt txn-credit">+₹5,000</p>
-                <span class="txn-badge-income">Income</span>
-              </div>
-            </div>
-
-            <div class="txn-divider"></div>
-
-            <div class="txn-row">
-              <span class="txn-icon txn-icon-amber">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-              </span>
-              <div class="txn-meta">
-                <p class="txn-name">College Cafeteria</p>
-                <span class="txn-chip chip-amber">Food · Jul 31</span>
-              </div>
-              <div class="txn-right">
-                <p class="txn-amt txn-debit">−₹180</p>
-              </div>
-            </div>
-
-            <div class="txn-divider"></div>
-
-            <div class="txn-row">
-              <span class="txn-icon txn-icon-sky">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 16H9m10 0h3v-3.15a1 1 0 00-.84-.99L16 11l-2.7-3.6a1 1 0 00-.8-.4H5.24a2 2 0 00-1.8 1.1l-.8 1.63A6 6 0 002 12.42V16h2"/><circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg>
-              </span>
-              <div class="txn-meta">
-                <p class="txn-name">Uber</p>
-                <span class="txn-chip chip-sky">Transport · Jul 30</span>
-              </div>
-              <div class="txn-right">
-                <p class="txn-amt txn-debit">−₹260</p>
-              </div>
-            </div>
-
-            <div class="txn-divider"></div>
-
-            <div class="txn-row">
-              <span class="txn-icon txn-icon-purple">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-              </span>
-              <div class="txn-meta">
-                <p class="txn-name">Textbooks</p>
-                <span class="txn-chip chip-purple">Education · Jul 26</span>
-              </div>
-              <div class="txn-right">
-                <p class="txn-amt txn-debit">−₹740</p>
-              </div>
-            </div>
-
+          <div class="txn-list" id="recentTxnList">
+            <!-- Dynamically populated up to 6 transactions -->
           </div>
+        </section>
+
+        <!-- ▸ Savings Goal Spotlight -->
+        <section class="card goal-card slide-up delay-4" id="spotlightCard">
+          <div class="goal-spotlight"></div>
+          <div class="goal-header-row">
+            <div class="goal-icon-wrap" id="spotlightIcon">🎯</div>
+            <div class="goal-text">
+              <p class="goal-title" id="spotlightTitle">Savings Goal</p>
+              <p class="goal-timeline" id="spotlightTimeline">🗓 Set a goal</p>
+            </div>
+            <span class="goal-badge" id="spotlightBadge">0%</span>
+          </div>
+
+          <div class="goal-amounts-row" id="spotlightAmountsRow">
+            <div class="goal-amt-item">
+              <span class="goal-amt-val" id="spotlightSaved">₹0</span>
+              <span class="goal-amt-lbl">saved</span>
+            </div>
+            <div class="goal-amt-divider"></div>
+            <div class="goal-amt-item">
+              <span class="goal-amt-val text-muted" id="spotlightRemaining">₹0</span>
+              <span class="goal-amt-lbl">remaining</span>
+            </div>
+            <div class="goal-amt-divider"></div>
+            <div class="goal-amt-item">
+              <span class="goal-amt-val" id="spotlightTarget">₹0</span>
+              <span class="goal-amt-lbl">target</span>
+            </div>
+          </div>
+
+          <div class="goal-seg-track" id="spotlightTrack">
+            <div class="goal-seg-fill" id="spotlightFill"></div>
+            <div class="goal-seg-marker" id="spotlightMarker" style="left:0%">
+              <span class="goal-seg-tip" id="spotlightTip">₹0</span>
+            </div>
+          </div>
+
+          <button class="btn-goal-add" id="spotlightAddBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span id="spotlightBtnText">Add to Savings</span>
+          </button>
         </section>
 
       </div>
@@ -393,7 +319,7 @@
           <h2 class="card-title" style="margin-bottom:16px">Quick Actions</h2>
           <div class="action-list">
 
-            <button class="action-row action-add-expense">
+            <button class="action-row action-add-expense" onclick="location.href='expenses.html#add'">
               <div class="action-row-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               </div>
@@ -404,7 +330,7 @@
               <svg class="action-row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
 
-            <button class="action-row action-add-income">
+            <button class="action-row action-add-income" onclick="location.href='expenses.html#income'">
               <div class="action-row-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="7 17 17 7"/><polyline points="7 7 17 7 17 17"/></svg>
               </div>
@@ -415,7 +341,7 @@
               <svg class="action-row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
 
-            <button class="action-row action-budget">
+            <button class="action-row action-budget" onclick="location.href='onboarding.html?edit=1#budget'">
               <div class="action-row-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
               </div>
@@ -426,17 +352,39 @@
               <svg class="action-row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
 
-            <button class="action-row action-export">
+            <button class="action-row action-export" id="actionExportBtn">
               <div class="action-row-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               </div>
               <div class="action-row-body">
                 <span class="action-row-title">Export Report</span>
-                <span class="action-row-sub">Download as PDF/CSV</span>
+                <span class="action-row-sub">Download as CSV</span>
               </div>
               <svg class="action-row-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
 
+          </div>
+        </section>
+
+        <section class="card profile-summary-card slide-up delay-3" aria-labelledby="profileSummaryTitle">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title" id="profileSummaryTitle">Your Setup</h2>
+              <p class="card-sub">Personal details and monthly plan</p>
+            </div>
+            <a href="onboarding.html?edit=1" class="link-btn">Edit →</a>
+          </div>
+          <dl class="profile-summary-details">
+            <div><dt>College</dt><dd id="profileCollege">Not added</dd></div>
+            <div><dt>Course</dt><dd id="profileCourse">Not added</dd></div>
+            <div><dt>Living</dt><dd id="profileLiving">Not set</dd></div>
+            <div><dt>Monthly income</dt><dd id="profileIncome">Not added</dd></div>
+            <div><dt>Income sources</dt><dd id="profileIncomeSources">Not added</dd></div>
+            <div><dt>Monthly budget</dt><dd id="profileMonthlyBudget">—</dd></div>
+          </dl>
+          <div class="profile-category-section">
+            <h3>Category budgets</h3>
+            <ul class="profile-category-list" id="profileCategoryBudgets"></ul>
           </div>
         </section>
 
@@ -445,123 +393,34 @@
           <div class="card-head">
             <div>
               <h2 class="card-title">Category Breakdown</h2>
-              <p class="card-sub">August 2026 · ₹8,640 total</p>
+              <p class="card-sub" id="catBreakdownSub">This Month</p>
             </div>
           </div>
 
          
           <div class="donut-wrap">
-            <div class="donut-ring" aria-hidden="true"></div>
+            <div class="donut-ring" id="donutRing" aria-hidden="true"></div>
             <div class="donut-center">
-              <span class="donut-label">₹8,640</span>
-              <span class="donut-sub">spent</span>
+              <span class="donut-label" id="donutLabel">₹0</span>
+              <span class="donut-sub" id="donutSub">spent</span>
             </div>
           </div>
 
-          <ul class="cat-list">
-            <li class="cat-row">
-              <span class="cat-color" style="background:#F87171"></span>
-              <span class="cat-name">Food &amp; drinks</span>
-              <div class="cat-bar-wrap">
-                <div class="cat-bar" style="width:36%;background:#F87171;opacity:0.8"></div>
-              </div>
-              <span class="cat-pct">36%</span>
-              <span class="cat-amt">₹3,120</span>
-            </li>
-            <li class="cat-row">
-              <span class="cat-color" style="background:#818CF8"></span>
-              <span class="cat-name">Education</span>
-              <div class="cat-bar-wrap">
-                <div class="cat-bar" style="width:26%;background:#818CF8;opacity:0.8"></div>
-              </div>
-              <span class="cat-pct">26%</span>
-              <span class="cat-amt">₹2,240</span>
-            </li>
-            <li class="cat-row">
-              <span class="cat-color" style="background:#FCD34D"></span>
-              <span class="cat-name">Entertainment</span>
-              <div class="cat-bar-wrap">
-                <div class="cat-bar" style="width:18%;background:#FCD34D;opacity:0.8"></div>
-              </div>
-              <span class="cat-pct">18%</span>
-              <span class="cat-amt">₹1,540</span>
-            </li>
-            <li class="cat-row">
-              <span class="cat-color" style="background:#38BDF8"></span>
-              <span class="cat-name">Transport</span>
-              <div class="cat-bar-wrap">
-                <div class="cat-bar" style="width:12%;background:#38BDF8;opacity:0.8"></div>
-              </div>
-              <span class="cat-pct">12%</span>
-              <span class="cat-amt">₹1,020</span>
-            </li>
-            <li class="cat-row">
-              <span class="cat-color" style="background:#A78BFA"></span>
-              <span class="cat-name">Other</span>
-              <div class="cat-bar-wrap">
-                <div class="cat-bar" style="width:8%;background:#A78BFA;opacity:0.8"></div>
-              </div>
-              <span class="cat-pct">8%</span>
-              <span class="cat-amt">₹720</span>
-            </li>
+          <ul class="cat-list" id="donutCatList">
           </ul>
-        </section>
-
-        
-        <section class="card goal-card slide-up delay-4">
-          <div class="goal-spotlight"></div>
-          <div class="goal-header-row">
-            <div class="goal-icon-wrap">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 3H8a2 2 0 00-2 2v2h12V5a2 2 0 00-2-2z"/></svg>
-            </div>
-            <div class="goal-text">
-              <p class="goal-title">New Laptop Fund</p>
-              <p class="goal-timeline">🗓 On track for October</p>
-            </div>
-            <span class="goal-badge">62%</span>
-          </div>
-
-          <div class="goal-amounts-row">
-            <div class="goal-amt-item">
-              <span class="goal-amt-val">₹27,900</span>
-              <span class="goal-amt-lbl">saved</span>
-            </div>
-            <div class="goal-amt-divider"></div>
-            <div class="goal-amt-item">
-              <span class="goal-amt-val text-muted">₹17,100</span>
-              <span class="goal-amt-lbl">remaining</span>
-            </div>
-            <div class="goal-amt-divider"></div>
-            <div class="goal-amt-item">
-              <span class="goal-amt-val">₹45,000</span>
-              <span class="goal-amt-lbl">target</span>
-            </div>
-          </div>
-
-          <div class="goal-seg-track">
-            <div class="goal-seg-fill"></div>
-            <div class="goal-seg-marker" style="left:62%">
-              <span class="goal-seg-tip">₹27,900</span>
-            </div>
-          </div>
-
-          <button class="btn-goal-add">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add to Savings
-          </button>
         </section>
 
       </div>
     </div>
 
     <div class="footer-strip slide-up delay-4">
-      <div class="tip-strip">
-        <div class="tip-icon-wrap">💡</div>
+      <div class="tip-strip" id="dashTipStrip">
+        <div class="tip-icon-wrap" id="dashTipIcon">💡</div>
         <div class="tip-content">
-          <span class="tip-label">Smart Tip</span>
-          <p class="tip-msg">You're on a <strong>6-day no-impulse streak</strong>! Skip one takeout order this week to add ₹300 straight to your laptop fund.</p>
+          <span class="tip-label" id="dashTipLabel">Smart Tip</span>
+          <p class="tip-msg" id="dashTipMsg"></p>
         </div>
-        <button class="tip-dismiss">Dismiss</button>
+        <button class="tip-dismiss" id="dashTipDismiss">Dismiss</button>
       </div>
       <button class="btn-logout" id="logoutBtn">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -580,7 +439,7 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
       <span>Expenses</span>
     </a>
-    <a href="expenses.html" class="bn-item bn-add" aria-label="Add expense">
+    <a href="expenses.html#add" class="bn-item bn-add" aria-label="Add expense">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     </a>
     <a href="analytics.html" class="bn-item">
@@ -593,6 +452,8 @@
     </a>
   </nav>
 
+  <script src="js/ui.js"></script>
+  <script src="js/insights.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="SpendSmart Goals — set savings targets and track your progress toward every dream.">
   <title>Goals · SpendSmart</title>
+  <link rel="icon" href="data:,">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +13,10 @@
 
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/pages.css">
+  <script src="js/auth.js"></script>
+  <script>Auth.requireAuth();</script>
+  <script src="js/store.js"></script>
+  <script>Store.requireOnboarded();</script>
 
   <style>
     /* ── Goals-specific micro tweaks ─────────────────────── */
@@ -123,13 +128,24 @@
           <span class="notif-badge"></span>
         </button>
         <div class="nav-divider"></div>
-        <div class="user-chip">
-          <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Alex" alt="Alex" class="user-avatar">
-          <div class="user-info">
-            <span class="user-name">Alex</span>
-            <span class="user-role">Student</span>
+        <div class="profile-menu-wrap">
+          <button type="button" class="user-chip" id="profileBtn" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
+            <img alt="" class="user-avatar" data-user-avatar>
+            <span class="user-info">
+              <span class="user-name" data-user-name></span>
+              <span class="user-role" data-user-role></span>
+            </span>
+            <span class="online-dot"></span>
+          </button>
+          <div class="profile-menu" id="profileMenu" aria-label="Account menu" hidden>
+            <div class="profile-menu-summary">
+              <span class="profile-menu-name" data-profile-menu-name></span>
+              <span class="profile-menu-email" data-profile-menu-email></span>
+            </div>
+            <a class="profile-menu-action" href="onboarding.html?edit=1">Edit profile &amp; budget</a>
+            <a class="profile-menu-action" href="login.html#signup" data-profile-signup hidden>Sign up to save your data</a>
+            <button type="button" class="profile-menu-action profile-menu-logout" data-profile-logout>Log out</button>
           </div>
-          <div class="online-dot"></div>
         </div>
       </div>
     </div>
@@ -144,7 +160,7 @@
       <div class="page-title-row">
         <div>
           <h1 class="page-title">Goals</h1>
-          <p class="page-sub">4 active goals · ₹58,300 total saved across all</p>
+          <p class="page-sub" id="goalsPageSub">0 active goals</p>
         </div>
         <button class="btn-primary-sm" id="addGoalBtn" style="flex:0;white-space:nowrap;padding:10px 16px;">
           + New Goal
@@ -158,48 +174,48 @@
         <div class="stat-icon stat-icon-green">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
         </div>
-        <div class="stat-value">4</div>
+        <div class="stat-value" id="statActiveGoals">0</div>
         <div class="stat-label">Active Goals</div>
-        <div class="stat-trend trend-up">2 on track 🎯</div>
+        <div class="stat-trend trend-up" id="statActiveGoalsTrend">0 on track 🎯</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon stat-icon-indigo">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7 7 7-7"/></svg>
         </div>
-        <div class="stat-value">₹58.3K</div>
+        <div class="stat-value" id="statTotalSaved">₹0</div>
         <div class="stat-label">Total Saved</div>
-        <div class="stat-trend trend-up">↑ ₹2,360 this month</div>
+        <div class="stat-trend trend-up" id="statTotalSavedTrend">↑ ₹0 this month</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon stat-icon-amber">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
         </div>
-        <div class="stat-value">Oct '26</div>
+        <div class="stat-value" id="statNextDeadline">—</div>
         <div class="stat-label">Next Deadline</div>
-        <div class="stat-trend trend-up">Laptop Fund</div>
+        <div class="stat-trend trend-up" id="statNextDeadlineGoal">—</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon stat-icon-red">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
         </div>
-        <div class="stat-value">₹3,820</div>
-        <div class="stat-label">Monthly Saving</div>
-        <div class="stat-trend trend-up">needed to stay on track</div>
+        <div class="stat-value" id="statMonthlySaving">₹0</div>
+        <div class="stat-label">Monthly Target</div>
+        <div class="stat-trend trend-up" id="statMonthlySavingSub">needed to stay on track</div>
       </div>
     </div>
 
     <!-- ── Overall progress hero ─────────────────────────────────────── -->
-    <div class="goals-hero slide-up delay-2">
-      <div class="goals-hero-emoji">🏆</div>
-      <div class="goals-hero-title">You're 52% to all your goals!</div>
-      <div class="goals-hero-sub">₹58,300 saved out of ₹1,12,000 target across 4 goals. Keep going, you're doing great.</div>
+    <div class="goals-hero slide-up delay-2" id="goalsHeroSection">
+      <div class="goals-hero-emoji" id="goalsHeroEmoji">🎯</div>
+      <div class="goals-hero-title" id="goalsHeroTitle">Your Savings Progress</div>
+      <div class="goals-hero-sub" id="goalsHeroSub">₹0 saved out of ₹0 target across all goals.</div>
       <div class="goals-hero-overall">
         <div class="goals-hero-overall-row">
           <span class="goals-hero-overall-label">Overall progress</span>
-          <span class="goals-hero-overall-val">52%</span>
+          <span class="goals-hero-overall-val" id="goalsHeroOverallVal">0%</span>
         </div>
         <div class="goals-hero-track">
-          <div class="goals-hero-fill" style="width:52%"></div>
+          <div class="goals-hero-fill" id="goalsHeroOverallFill" style="width:0%"></div>
         </div>
       </div>
     </div>
@@ -208,143 +224,7 @@
     <div class="two-col-layout">
 
       <!-- LEFT — Goal cards -->
-      <div class="goal-grid slide-up delay-3">
-
-        <!-- Goal 1: Laptop -->
-        <div class="goal-item">
-          <div class="goal-glow" style="background:radial-gradient(circle, rgba(16,185,129,0.2), transparent 70%)"></div>
-          <div class="goal-item-header">
-            <div class="goal-icon goal-icon-green">💻</div>
-            <div class="goal-info">
-              <div class="goal-name">New Laptop Fund</div>
-              <div class="goal-timeline">🗓 On track for October 2026</div>
-            </div>
-            <span class="goal-pct-badge" style="color:var(--emerald-light);">62%</span>
-          </div>
-          <div class="goal-amounts">
-            <div class="goal-amt-item">
-              <span class="goal-amt-val">₹27,900</span>
-              <span class="goal-amt-lbl">Saved</span>
-            </div>
-            <div class="goal-amt-item">
-              <span class="goal-amt-val" style="color:var(--text-muted);">₹17,100</span>
-              <span class="goal-amt-lbl">Remaining</span>
-            </div>
-            <div class="goal-amt-item">
-              <span class="goal-amt-val">₹45,000</span>
-              <span class="goal-amt-lbl">Target</span>
-            </div>
-          </div>
-          <div class="goal-track">
-            <div class="goal-fill" style="width:62%;background:linear-gradient(90deg,var(--emerald),var(--indigo-light))"></div>
-          </div>
-          <div class="goal-actions">
-            <button class="btn-goal-contribute">+ Add Savings</button>
-            <button class="btn-goal-edit">Edit</button>
-          </div>
-        </div>
-
-        <!-- Goal 2: Emergency Fund -->
-        <div class="goal-item">
-          <div class="goal-glow" style="background:radial-gradient(circle, rgba(99,102,241,0.2), transparent 70%)"></div>
-          <div class="goal-item-header">
-            <div class="goal-icon goal-icon-indigo">🛡️</div>
-            <div class="goal-info">
-              <div class="goal-name">Emergency Fund</div>
-              <div class="goal-timeline">🗓 Target: December 2026</div>
-            </div>
-            <span class="goal-pct-badge" style="color:var(--indigo-light);">47%</span>
-          </div>
-          <div class="goal-amounts">
-            <div class="goal-amt-item">
-              <span class="goal-amt-val">₹14,100</span>
-              <span class="goal-amt-lbl">Saved</span>
-            </div>
-            <div class="goal-amt-item">
-              <span class="goal-amt-val" style="color:var(--text-muted);">₹15,900</span>
-              <span class="goal-amt-lbl">Remaining</span>
-            </div>
-            <div class="goal-amt-item">
-              <span class="goal-amt-val">₹30,000</span>
-              <span class="goal-amt-lbl">Target</span>
-            </div>
-          </div>
-          <div class="goal-track">
-            <div class="goal-fill" style="width:47%;background:linear-gradient(90deg,var(--indigo),var(--purple))"></div>
-          </div>
-          <div class="goal-actions">
-            <button class="btn-goal-contribute">+ Add Savings</button>
-            <button class="btn-goal-edit">Edit</button>
-          </div>
-        </div>
-
-        <!-- Goal 3: Goa Trip -->
-        <div class="goal-item">
-          <div class="goal-glow" style="background:radial-gradient(circle, rgba(245,158,11,0.18), transparent 70%)"></div>
-          <div class="goal-item-header">
-            <div class="goal-icon goal-icon-amber">✈️</div>
-            <div class="goal-info">
-              <div class="goal-name">Goa Trip with Friends</div>
-              <div class="goal-timeline">⚡ Needs attention · Feb 2027</div>
-            </div>
-            <span class="goal-pct-badge" style="color:#FCD34D;">34%</span>
-          </div>
-          <div class="goal-amounts">
-            <div class="goal-amt-item">
-              <span class="goal-amt-val">₹5,100</span>
-              <span class="goal-amt-lbl">Saved</span>
-            </div>
-            <div class="goal-amt-item">
-              <span class="goal-amt-val" style="color:var(--text-muted);">₹9,900</span>
-              <span class="goal-amt-lbl">Remaining</span>
-            </div>
-            <div class="goal-amt-item">
-              <span class="goal-amt-val">₹15,000</span>
-              <span class="goal-amt-lbl">Target</span>
-            </div>
-          </div>
-          <div class="goal-track">
-            <div class="goal-fill" style="width:34%;background:linear-gradient(90deg,#F59E0B,#FCD34D)"></div>
-          </div>
-          <div class="goal-actions">
-            <button class="btn-goal-contribute">+ Add Savings</button>
-            <button class="btn-goal-edit">Edit</button>
-          </div>
-        </div>
-
-        <!-- Goal 4: New Headphones -->
-        <div class="goal-item">
-          <div class="goal-glow" style="background:radial-gradient(circle, rgba(167,139,250,0.18), transparent 70%)"></div>
-          <div class="goal-item-header">
-            <div class="goal-icon goal-icon-purple">🎧</div>
-            <div class="goal-info">
-              <div class="goal-name">Sony WH-1000XM5</div>
-              <div class="goal-timeline">🗓 On track for September 2026</div>
-            </div>
-            <span class="goal-pct-badge" style="color:var(--purple);">91%</span>
-          </div>
-          <div class="goal-amounts">
-            <div class="goal-amt-item">
-              <span class="goal-amt-val">₹20,020</span>
-              <span class="goal-amt-lbl">Saved</span>
-            </div>
-            <div class="goal-amt-item">
-              <span class="goal-amt-val" style="color:var(--text-muted);">₹1,980</span>
-              <span class="goal-amt-lbl">Remaining</span>
-            </div>
-            <div class="goal-amt-item">
-              <span class="goal-amt-val">₹22,000</span>
-              <span class="goal-amt-lbl">Target</span>
-            </div>
-          </div>
-          <div class="goal-track">
-            <div class="goal-fill" style="width:91%;background:linear-gradient(90deg,var(--purple),var(--indigo-light))"></div>
-          </div>
-          <div class="goal-actions">
-            <button class="btn-goal-contribute">+ Add ₹1,980 to complete!</button>
-            <button class="btn-goal-edit">Edit</button>
-          </div>
-        </div>
+      <div class="goal-grid slide-up delay-3" id="goalsGrid">
 
         <!-- Add new goal card -->
         <div class="goal-add-card" id="addGoalCard">
@@ -362,9 +242,10 @@
 
         <!-- Add goal form (shown when button clicked) -->
         <section class="add-form-card slide-up delay-2" id="addGoalFormCard" style="display:none;border-color:rgba(99,102,241,0.25);">
-          <div class="form-title">
+          <input type="hidden" id="editingGoalId" value="">
+          <div class="form-title" id="goalFormTitle">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            New Savings Goal
+            <span id="goalFormHeading">New Savings Goal</span>
           </div>
           <div class="form-grid">
             <div class="form-group" style="grid-column:1/-1;">
@@ -372,12 +253,12 @@
               <input class="form-control" id="goalName" type="text" placeholder="e.g. New Smartphone">
             </div>
             <div class="form-group">
-              <label class="form-label" for="goalTarget">Target Amount (₹)</label>
-              <input class="form-control" id="goalTarget" type="number" placeholder="0.00" min="0">
+              <label class="form-label" for="goalTarget">Target Amount (<span data-currency-symbol>₹</span>)</label>
+              <input class="form-control" id="goalTarget" type="text" inputmode="decimal" placeholder="0.00">
             </div>
             <div class="form-group">
-              <label class="form-label" for="goalSaved">Already Saved (₹)</label>
-              <input class="form-control" id="goalSaved" type="number" placeholder="0.00" min="0">
+              <label class="form-label" for="goalSaved">Already Saved (<span data-currency-symbol>₹</span>)</label>
+              <input class="form-control" id="goalSaved" type="text" inputmode="decimal" placeholder="0.00">
             </div>
             <div class="form-group">
               <label class="form-label" for="goalDeadline">Target Date</label>
@@ -388,117 +269,46 @@
               <input class="form-control" id="goalIcon" type="text" placeholder="🎯" maxlength="2">
             </div>
           </div>
-          <div class="form-actions" style="margin-top:14px;">
+          <div class="form-actions" style="margin-top:14px;display:flex;align-items:center;gap:8px;">
+            <button class="btn-ghost-sm" id="deleteGoalBtn" type="button" style="display:none;color:#F87171;margin-right:auto;">Delete Goal</button>
             <button class="btn-ghost-sm" id="cancelGoalBtn" type="button">Cancel</button>
-            <button class="btn-primary-sm" type="button">Create Goal</button>
+            <button class="btn-primary-sm" id="saveGoalBtn" type="button">Create Goal</button>
           </div>
         </section>
 
-        <!-- Laptop milestone timeline -->
-        <section class="card slide-up delay-3">
+        <!-- Milestones timeline -->
+        <section class="card slide-up delay-3" id="milestonesSection">
           <div class="card-head">
             <div>
-              <h2 class="card-title">💻 Laptop Fund Milestones</h2>
-              <p class="card-sub">₹27,900 saved · ₹45,000 target</p>
+              <h2 class="card-title" id="milestoneCardTitle">🎯 Goal Milestones</h2>
+              <p class="card-sub" id="milestoneCardSub">Select a goal to view progress milestones</p>
             </div>
           </div>
-          <div class="milestone-list">
-            <div class="milestone-item">
-              <div class="milestone-dot milestone-dot-done">✓</div>
-              <div class="milestone-content">
-                <div class="milestone-title">First ₹5,000 saved</div>
-                <div class="milestone-date">June 5, 2026</div>
-              </div>
-            </div>
-            <div class="milestone-item">
-              <div class="milestone-dot milestone-dot-done">✓</div>
-              <div class="milestone-content">
-                <div class="milestone-title">25% milestone — ₹11,250</div>
-                <div class="milestone-date">July 12, 2026</div>
-              </div>
-            </div>
-            <div class="milestone-item">
-              <div class="milestone-dot milestone-dot-done">✓</div>
-              <div class="milestone-content">
-                <div class="milestone-title">50% milestone — ₹22,500</div>
-                <div class="milestone-date">August 1, 2026</div>
-              </div>
-            </div>
-            <div class="milestone-item">
-              <div class="milestone-dot milestone-dot-active">→</div>
-              <div class="milestone-content">
-                <div class="milestone-title">75% milestone — ₹33,750</div>
-                <div class="milestone-date">Target: Sep 10, 2026</div>
-              </div>
-            </div>
-            <div class="milestone-item">
-              <div class="milestone-dot milestone-dot-future">○</div>
-              <div class="milestone-content">
-                <div class="milestone-title">Goal complete! — ₹45,000 🎉</div>
-                <div class="milestone-date">Target: Oct 15, 2026</div>
-              </div>
-            </div>
+          <div class="milestone-list" id="milestoneList">
           </div>
         </section>
 
         <!-- Smart saving tips -->
-        <section class="card slide-up delay-4">
+        <section class="card slide-up delay-4" id="goalTipsSection">
           <div class="card-head">
             <div>
               <h2 class="card-title">Smart Saving Tips</h2>
               <p class="card-sub">Tailored to your goals</p>
             </div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <div class="tip-banner">
-              <div class="tip-banner-icon">🚀</div>
-              <div class="tip-banner-body">
-                <div class="tip-banner-title">Almost there on headphones!</div>
-                <p class="tip-banner-msg">Only <strong>₹1,980</strong> left on your Sony headphones goal. One less takeout week gets you there!</p>
-              </div>
-            </div>
-            <div class="tip-banner" style="background:rgba(99,102,241,0.08);border-color:rgba(99,102,241,0.2);">
-              <div class="tip-banner-icon">📅</div>
-              <div class="tip-banner-body">
-                <div class="tip-banner-title" style="color:var(--indigo-light);">Automate your savings</div>
-                <p class="tip-banner-msg">Set up a recurring ₹2,000 monthly transfer on salary day to hit all 4 goals by their deadlines.</p>
-              </div>
-            </div>
-            <div class="tip-banner" style="background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.2);">
-              <div class="tip-banner-icon">⚡</div>
-              <div class="tip-banner-body">
-                <div class="tip-banner-title" style="color:#FCD34D;">Goa trip needs attention</div>
-                <p class="tip-banner-msg">You need ₹1,650/month to reach ₹15,000 by February 2027. You're currently behind by ₹420.</p>
-              </div>
-            </div>
+          <div id="goalTipsContainer" style="display:flex;flex-direction:column;gap:10px;">
           </div>
         </section>
 
         <!-- Completed goals -->
-        <section class="card slide-up delay-5">
+        <section class="card slide-up delay-5" id="completedGoalsSection">
           <div class="card-head">
             <div>
               <h2 class="card-title">Completed Goals 🏅</h2>
-              <p class="card-sub">2 goals achieved this year</p>
+              <p class="card-sub" id="completedGoalsSub">0 goals achieved</p>
             </div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.15);border-radius:12px;">
-              <span style="font-size:22px;">📱</span>
-              <div style="flex:1;">
-                <div style="font-size:13px;font-weight:600;color:var(--text-primary);">New Phone — Redmi Note 13</div>
-                <div style="font-size:11px;color:var(--text-muted);">Completed May 2026 · ₹18,000</div>
-              </div>
-              <span class="chip chip-green" style="font-size:11px;">Done ✓</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:12px;padding:10px;background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.15);border-radius:12px;">
-              <span style="font-size:22px;">📚</span>
-              <div style="flex:1;">
-                <div style="font-size:13px;font-weight:600;color:var(--text-primary);">Semester Books &amp; Supplies</div>
-                <div style="font-size:11px;color:var(--text-muted);">Completed March 2026 · ₹4,200</div>
-              </div>
-              <span class="chip chip-green" style="font-size:11px;">Done ✓</span>
-            </div>
+          <div id="completedGoalsList" style="display:flex;flex-direction:column;gap:10px;">
           </div>
         </section>
 
@@ -517,7 +327,7 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
       <span>Expenses</span>
     </a>
-    <a href="expenses.html" class="bn-item bn-add" aria-label="Add expense">
+    <a href="expenses.html#add" class="bn-item bn-add" aria-label="Add expense">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     </a>
     <a href="analytics.html" class="bn-item">
@@ -549,5 +359,8 @@
     });
   </script>
 
+  <script src="js/ui.js"></script>
+  <script src="js/insights.js"></script>
+  <script src="js/goals.js"></script>
 </body>
 </html>

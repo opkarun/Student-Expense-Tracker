@@ -211,64 +211,12 @@
   display: block;
 }
 
-/* ---- Row: remember me / forgot ---- */
+/* ---- Forgot password link row ---- */
 .form-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin-top: -2px;
-}
-
-.checkbox-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.checkbox-wrap input {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.checkbox-box {
-  width: 18px;
-  height: 18px;
-  border-radius: 6px;
-  border: 1.5px solid var(--glass-border);
-  background: rgba(255, 255, 255, 0.04);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--transition-fast);
-}
-
-.checkbox-box::after {
-  content: '';
-  width: 9px;
-  height: 6px;
-  border-left: 2px solid white;
-  border-bottom: 2px solid white;
-  transform: rotate(-45deg) scale(0);
-  transition: transform var(--transition-fast);
-  margin-top: -2px;
-}
-
-.checkbox-wrap input:checked + .checkbox-box {
-  background: var(--gradient-primary);
-  border-color: transparent;
-}
-
-.checkbox-wrap input:checked + .checkbox-box::after {
-  transform: rotate(-45deg) scale(1);
-}
-
-.checkbox-label {
-  font-size: 13px;
-  color: var(--text-secondary);
 }
 
 .forgot-link {
@@ -456,5 +404,51 @@
 
   .welcome-text h2 {
     font-size: 28px;
+  }
+}
+
+/* ---- Shared login/sign-up modes and form feedback ---- */
+#loginForm[data-mode="login"] [data-signup-only],
+#loginForm[data-mode="signup"] [data-login-only] {
+  display: none;
+}
+
+.input-error a {
+  color: var(--emerald-light);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.form-message,
+.form-notice {
+  border-radius: var(--radius-sm);
+  padding: 11px 13px;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.form-message {
+  color: #fecaca;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  background: rgba(248, 113, 113, 0.1);
+}
+
+.form-notice {
+  color: var(--text-secondary);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+}
+
+.form-message[hidden],
+.form-notice[hidden],
+.btn[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn.rippling::after,
+  .btn.is-loading .btn-spinner {
+    animation: none;
   }
 }

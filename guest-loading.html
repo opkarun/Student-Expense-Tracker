@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="refresh" content="2;url=index.html">
+  <meta id="guestRedirect" http-equiv="refresh" content="2;url=index.html">
   <title>Signing you in · Student Expense Tracker</title>
+  <link rel="icon" href="data:,">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +13,7 @@
 
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/login.css">
+  <script src="js/auth.js"></script>
 </head>
 <body>
 
@@ -25,9 +27,23 @@
   <main class="login-wrapper">
     <section class="login-card fade-in loading-card">
       <div class="loading-spinner" aria-hidden="true"></div>
-      <p class="loading-text">Setting up your guest session&hellip;</p>
+      <p class="loading-text" id="guestStatus" role="status">Setting up your guest session&hellip;</p>
+      <a class="btn btn-ghost" id="guestReturn" href="login.html" hidden>Back to sign in</a>
     </section>
   </main>
+
+  <script>
+    (function () {
+      const guestResult = Auth.loginAsGuest();
+      if (!guestResult.ok) {
+        document.getElementById("guestRedirect").remove();
+        const status = document.getElementById("guestStatus");
+        status.setAttribute("role", "alert");
+        status.textContent = guestResult.message;
+        document.getElementById("guestReturn").hidden = false;
+      }
+    })();
+  </script>
 
 </body>
 </html>

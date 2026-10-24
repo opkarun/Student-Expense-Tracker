@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup Your Profile · SpendSmart</title>
+  <link rel="icon" href="data:,">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/onboarding.css">
+  <script src="js/auth.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/ui.js"></script>
+</head>
+<body>
+
+  <!-- Background scene matching login -->
+  <div class="bg-scene" aria-hidden="true">
+    <span class="blob blob-emerald"></span>
+    <span class="blob blob-indigo"></span>
+    <span class="blob blob-purple"></span>
+    <div class="grain"></div>
+  </div>
+
+  <main class="onboard-wrapper">
+    <section class="onboard-card fade-in" id="wizardCard">
+
+      <!-- Header with step progress -->
+      <div class="onboard-header">
+        <div class="onboard-top-row">
+          <span class="onboard-step-indicator" id="stepCounter">Step 1 of 4</span>
+          <button type="button" class="skip-guest-link" id="skipGuestBtn" hidden>Skip for now &rarr;</button>
+        </div>
+        <div class="onboard-progress-track">
+          <div class="onboard-progress-bar" id="progressBar"></div>
+        </div>
+      </div>
+
+      <!-- STEP 1: About You -->
+      <div class="step-pane active" id="stepPane1" data-step="1">
+        <div class="welcome-text" style="margin-bottom:18px;">
+          <h2 class="onboard-step-heading">Tell us about you</h2>
+          <p class="onboard-step-sub">Let's personalize your SpendSmart experience.</p>
+        </div>
+
+        <div class="input-group" id="grpDisplayName">
+          <label for="displayName">Display Name <span style="color:var(--red)">*</span></label>
+          <div class="input-field">
+            <input type="text" id="displayName" placeholder="e.g. Alex" maxlength="50" autocomplete="name" aria-describedby="displayNameErr">
+          </div>
+          <span class="input-error" id="displayNameErr"></span>
+        </div>
+
+        <div class="input-group" id="grpCollege">
+          <label for="college">College / University <span style="color:var(--text-muted);font-weight:normal">(optional)</span></label>
+          <div class="input-field">
+            <input type="text" id="college" placeholder="e.g. Stanford University" maxlength="100">
+          </div>
+        </div>
+
+        <div class="input-group" id="grpCourse">
+          <label for="course">Course &amp; Year <span style="color:var(--text-muted);font-weight:normal">(optional)</span></label>
+          <div class="input-field">
+            <input type="text" id="course" placeholder="e.g. B.Tech Computer Science, 2nd Year" maxlength="80">
+          </div>
+        </div>
+
+        <div class="input-group" id="grpLiving">
+          <label id="livingLabel">Living Situation <span style="color:var(--red)">*</span></label>
+          <div class="choice-cards-grid" role="radiogroup" aria-labelledby="livingLabel">
+            <div class="choice-card selected" data-value="hostel" tabindex="0" role="radio" aria-checked="true">
+              <span class="choice-icon">🏢</span>
+              <span class="choice-title">Hostel</span>
+              <span class="choice-sub">Campus living</span>
+            </div>
+            <div class="choice-card" data-value="pg" tabindex="0" role="radio" aria-checked="false">
+              <span class="choice-icon">🏠</span>
+              <span class="choice-title">PG / Rent</span>
+              <span class="choice-sub">Rented flat/room</span>
+            </div>
+            <div class="choice-card" data-value="home" tabindex="0" role="radio" aria-checked="false">
+              <span class="choice-icon">🏡</span>
+              <span class="choice-title">Home</span>
+              <span class="choice-sub">With family</span>
+            </div>
+          </div>
+          <span class="input-error" id="livingErr"></span>
+        </div>
+      </div>
+
+      <!-- STEP 2: Your Money -->
+      <div class="step-pane" id="stepPane2" data-step="2">
+        <div class="welcome-text" style="margin-bottom:18px;">
+          <h2 class="onboard-step-heading">Your Money &amp; Budget</h2>
+          <p class="onboard-step-sub">Set your currency and monthly spending limit.</p>
+        </div>
+
+        <div class="input-group" id="grpCurrency">
+          <label for="currencySelect">Currency</label>
+          <div class="input-field">
+            <select id="currencySelect" style="width:100%;background:transparent;border:none;color:var(--text-primary);outline:none;font-size:14.5px;padding:12px 0;">
+              <option value="INR" style="background:#0f152d;">INR (₹) — Indian Rupee</option>
+              <option value="USD" style="background:#0f152d;">USD ($) — US Dollar</option>
+              <option value="EUR" style="background:#0f152d;">EUR (€) — Euro</option>
+              <option value="GBP" style="background:#0f152d;">GBP (£) — British Pound</option>
+            </select>
+          </div>
+          <span class="input-hint" style="font-size:11.5px;color:var(--text-muted);margin-top:2px;">Changes currency symbol only, no rate conversion.</span>
+        </div>
+
+        <div class="input-group" id="grpIncome">
+          <label for="monthlyIncome">Monthly Income / Allowance <span style="color:var(--text-muted);font-weight:normal">(optional)</span></label>
+          <div class="input-field">
+            <input type="text" inputmode="numeric" id="monthlyIncome" placeholder="e.g. 15,000">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Income Sources <span style="color:var(--text-muted);font-weight:normal">(select all that apply)</span></label>
+          <div class="chips-select-wrap" id="incomeSourcesChips">
+            <span class="select-chip" data-source="Parents">Parents</span>
+            <span class="select-chip" data-source="Part-time job">Part-time job</span>
+            <span class="select-chip" data-source="Scholarship">Scholarship</span>
+            <span class="select-chip" data-source="Other">Other</span>
+          </div>
+        </div>
+
+        <div class="input-group" id="grpBudget">
+          <label for="monthlyBudget">Monthly Spending Budget <span style="color:var(--red)">*</span></label>
+          <div class="input-field">
+            <input type="text" inputmode="numeric" id="monthlyBudget" placeholder="e.g. 10,000" aria-describedby="monthlyBudgetErr">
+          </div>
+          <span class="input-error" id="monthlyBudgetErr"></span>
+          <span class="input-hint" style="font-size:11.5px;color:var(--text-muted);margin-top:2px;">Your overall target spending cap for each calendar month.</span>
+        </div>
+      </div>
+
+      <!-- STEP 3: Category Budgets -->
+      <div class="step-pane" id="stepPane3" data-step="3">
+        <div class="welcome-text" style="margin-bottom:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <h2 class="onboard-step-heading">Category Budgets</h2>
+              <p class="onboard-step-sub">Divide your monthly budget into spending buckets.</p>
+            </div>
+            <button type="button" class="btn btn-ghost btn-sm" id="btnAutoSplit" style="padding:6px 12px;font-size:12px;">Auto-split</button>
+          </div>
+        </div>
+
+        <!-- Allocation status bar -->
+        <div class="alloc-summary-bar">
+          <div class="alloc-stat-row">
+            <span style="color:var(--text-secondary);font-size:12.5px;">Allocated: <strong id="allocSpentText" style="color:var(--text-primary);">₹0</strong> / <span id="allocTotalText">₹10,000</span></span>
+            <span id="allocStatusTag" style="font-size:12px;font-weight:700;color:var(--emerald-light);">0% allocated</span>
+          </div>
+          <div class="alloc-progress-track">
+            <div class="alloc-progress-fill" id="allocProgressFill" style="width:0%"></div>
+          </div>
+          <div class="alloc-error-msg" id="allocErrorMsg" hidden></div>
+        </div>
+
+        <!-- Inputs for all 8 categories -->
+        <div class="cat-budget-grid" id="catBudgetGrid">
+          <!-- Dynamically populated from Store.CATEGORIES -->
+        </div>
+      </div>
+
+      <!-- STEP 4: First Goal & Finish -->
+      <div class="step-pane" id="stepPane4" data-step="4">
+        <div class="welcome-text" style="margin-bottom:16px;">
+          <h2 class="onboard-step-heading">Set Your First Goal</h2>
+          <p class="onboard-step-sub">Optional — start saving for something you care about.</p>
+        </div>
+
+        <div class="input-group" id="grpGoalName">
+          <label for="goalName">Goal Name <span style="color:var(--text-muted);font-weight:normal">(optional)</span></label>
+          <div class="input-field">
+            <input type="text" id="goalName" placeholder="e.g. New Laptop Fund" maxlength="60" aria-describedby="goalNameErr">
+          </div>
+          <span class="input-error" id="goalNameErr"></span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="input-group" id="grpGoalTarget">
+            <label for="goalTarget">Target Amount (<span data-currency-symbol>₹</span>)</label>
+            <div class="input-field">
+              <input type="text" inputmode="numeric" id="goalTarget" placeholder="e.g. 45,000" aria-describedby="goalTargetErr">
+            </div>
+            <span class="input-error" id="goalTargetErr"></span>
+          </div>
+
+          <div class="input-group" id="grpGoalDate">
+            <label for="goalDeadline">Target Date</label>
+            <div class="input-field">
+              <input type="date" id="goalDeadline" aria-describedby="goalDateErr">
+            </div>
+            <span class="input-error" id="goalDateErr"></span>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Goal Icon</label>
+          <div class="emoji-picker-row" id="goalEmojiPicker">
+            <button type="button" class="emoji-btn selected" data-emoji="💻">💻</button>
+            <button type="button" class="emoji-btn" data-emoji="🛡️">🛡️</button>
+            <button type="button" class="emoji-btn" data-emoji="✈️">✈️</button>
+            <button type="button" class="emoji-btn" data-emoji="🎧">🎧</button>
+            <button type="button" class="emoji-btn" data-emoji="📱">📱</button>
+            <button type="button" class="emoji-btn" data-emoji="📚">📚</button>
+            <button type="button" class="emoji-btn" data-emoji="🏍️">🏍️</button>
+            <button type="button" class="emoji-btn" data-emoji="🎓">🎓</button>
+            <button type="button" class="emoji-btn" data-emoji="🎁">🎁</button>
+            <button type="button" class="emoji-btn" data-emoji="🏠">🏠</button>
+            <button type="button" class="emoji-btn" data-emoji="🎮">🎮</button>
+            <button type="button" class="emoji-btn" data-emoji="💰">💰</button>
+          </div>
+        </div>
+
+        <div class="section-divider" style="margin:8px 0;" id="sampleDataDivider"></div>
+
+        <label class="checkbox-label" id="sampleDataWrap">
+          <input type="checkbox" id="chkSampleData">
+          <span>Add sample transactions so I can explore</span>
+        </label>
+      </div>
+
+      <!-- Navigation buttons -->
+      <div class="onboard-actions">
+        <button type="button" class="btn btn-ghost" id="btnBack" style="visibility:hidden">Back</button>
+        <button type="button" class="btn btn-primary" id="btnNext">
+          <span id="btnNextLabel">Continue</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <!-- Success Screen -->
+      <div class="onboard-success" id="successScreen">
+        <div class="success-icon-badge">✨</div>
+        <h2 style="font-family:'Outfit',sans-serif;font-size:26px;font-weight:800;color:var(--text-primary);">You're all set!</h2>
+        <p style="font-size:14px;color:var(--text-secondary);max-width:360px;line-height:1.6;">
+          Your budget and preferences are saved. Loading your personalized SpendSmart dashboard...
+        </p>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="js/onboarding.js"></script>
+</body>
+</html>
