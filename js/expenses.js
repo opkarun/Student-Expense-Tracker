@@ -100,7 +100,7 @@
   // Gemini API key — replace with your actual key from https://aistudio.google.com/
   // Promise usage note: The API call in buildGeminiPromise() returns a Promise via fetch()
   // Can be set via localStorage: localStorage.setItem('ss_gemini_api_key', 'your-key')
-  const GEMINI_API_KEY = (typeof localStorage !== "undefined" && localStorage.getItem("ss_gemini_api_key")) || "YOUR_GEMINI_API_KEY_HERE";
+  const GEMINI_API_KEY = (typeof localStorage !== "undefined" && localStorage.getItem("ss_gemini_api_key")) || "";
 
   // ── Helper: Format month string ──────────────────────────────────────────
   function getMonthKey() {
@@ -488,7 +488,7 @@
         if (t.type === "income") {
           iconSpan.style.background = "rgba(16, 185, 129, 0.15)";
           iconSpan.style.color = "var(--emerald-light)";
-          iconSpan.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>';
+          iconSpan.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12"/><path d="M6 8h12"/><path d="m6 13 8.5 8"/><path d="M6 13h3"/><path d="M9 13c6.667 0 6.667-10 0-10"/></svg>';
         } else if (cat) {
           iconSpan.style.background = `${cat.hex}1f`;
           iconSpan.style.color = cat.hex;
